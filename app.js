@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────
-   NAVRASA — menu data, 3D bowls, interactions
+   NAVRASA — menu data, bowl builder, interactions
    ───────────────────────────────────────────── */
 document.documentElement.classList.add("js");
 
@@ -127,68 +127,46 @@ const MENU = [
   }
 ];
 
-/* ── BOWL SPECS ───────────────────────────────── */
-const BOWLS = {
-  tropical: { name: "Tropical Fruit Bowl", price: 99, colors: ["#ffc247", "#ff9d3f", "#ffe08a", "#f7e9b0", "#8cbf77"], leaves: 2, chips: 2 },
-  mango:    { name: "Mango Tropical Bowl", price: 149, colors: ["#ffcf5e", "#ffb03a", "#ff9d3f", "#f7e6a8", "#ff8f5e"], leaves: 2, chips: 3 },
-  banana:   { name: "Banana Crunch Bowl", price: 129, colors: ["#f6e39a", "#f0d777", "#e9dfb4", "#d9a05b", "#faf0cf"], leaves: 1, chips: 6 },
-  choco:    { name: "Choco Banana Bowl", price: 149, colors: ["#6b4630", "#4e3020", "#8a5c3c", "#f3dfa2", "#3d2418"], leaves: 1, chips: 4 },
-  berry:    { name: "Fruit & Granola Bowl", price: 159, colors: ["#e0505f", "#c22f45", "#f2d06b", "#a8487f", "#e8857a"], leaves: 2, chips: 5 }
-};
-
-/* fruit layout: x / y in % of the bowl opening, w = diameter in % */
-const LAYOUT = [
-  { x: 50, y: 62, w: 25 }, { x: 24, y: 50, w: 20 }, { x: 75, y: 48, w: 21 },
-  { x: 38, y: 34, w: 17 }, { x: 63, y: 32, w: 18 }, { x: 13, y: 64, w: 16 },
-  { x: 87, y: 62, w: 17 }, { x: 50, y: 20, w: 14 }, { x: 27, y: 74, w: 14 },
-  { x: 74, y: 76, w: 15 }, { x: 8, y: 44, w: 12 }, { x: 92, y: 40, w: 13 }
+/* ── BOWLS ON PHOTO ───────────────────────────── */
+const BASES = [
+  { key: "mango", name: "Mango Tropical Bowl", price: 149, img: "./images/bowl-tropical.jpg", alt: "Bowl of cut mango, berries, almonds and fresh herbs" },
+  { key: "banana", name: "Banana Crunch Bowl", price: 129, img: "./images/bowl-banana.jpg", alt: "Top-down view of a bowl of sliced banana over chia pudding" },
+  { key: "parfait", name: "Fruit & Yogurt Parfait", price: 109, img: "./images/bowl-parfait.jpg", alt: "Bowl of oats topped with strawberries, blueberries, kiwi and mint" },
+  { key: "berry", name: "Fruit & Granola Bowl", price: 159, img: "./images/bowl-fruit.jpg", alt: "Bowl of cut orange, kiwi, banana and strawberries with mint" }
 ];
 
-function bowlMarkup(spec) {
-  const colors = spec.colors && spec.colors.length ? spec.colors : ["#ffb03a", "#ef8b2c"];
-  let fruits = "";
-  LAYOUT.forEach((pos, i) => {
-    const c1 = colors[i % colors.length];
-    const c2 = colors[(i + 1) % colors.length];
-    const rotate = (i * 47) % 360;
-    fruits += `<span class="fruit${i % 4 === 0 ? " fruit--wedge" : ""}" style="left:${pos.x}%;top:${pos.y}%;--w:${pos.w}%;--c1:${c1};--c2:${c2};z-index:${Math.round(pos.y)};transform:translate(-50%,-50%) rotate(${rotate}deg)"></span>`;
-  });
-  const leaves = spec.leaves || 0;
-  for (let i = 0; i < leaves; i++) {
-    const x = 22 + i * 33;
-    fruits += `<span class="leaf-shape" style="left:${x}%;top:${16 + i * 9}%;--w:${13 + i * 2}%;z-index:${90 + i};transform:translate(-50%,-50%) rotate(${-24 + i * 42}deg)"></span>`;
-  }
-  const chips = spec.chips || 0;
-  for (let i = 0; i < chips; i++) {
-    const x = 18 + ((i * 23) % 66);
-    const y = 26 + ((i * 31) % 52);
-    const w = 3.2 + ((i * 7) % 10) / 4;
-    fruits += `<span class="crumb" style="left:${x}%;top:${y}%;--w:${w}%;z-index:${95 + i};transform:translate(-50%,-50%) rotate(${(i * 61) % 180}deg)"></span>`;
-  }
-  return `<div class="bowl__scene"><div class="bowl__tilt">
-    <div class="bowl__shadow"></div>
-    <div class="bowl__interior"></div>
-    <div class="bowl__fruits">${fruits}</div>
-    <div class="bowl__wall"></div>
-    <div class="bowl__gloss"></div>
-    <div class="bowl__rim"></div>
-    <div class="bowl__foot"></div>
-  </div></div>`;
-}
+const ADDONS = [
+  { n: "Extra banana", p: 15 },
+  { n: "Extra apple", p: 20 },
+  { n: "Pomegranate", p: 20 },
+  { n: "Mixed seeds", p: 20 },
+  { n: "Chia seeds", p: 15 },
+  { n: "Granola", p: 20 },
+  { n: "Oats", p: 15 },
+  { n: "Peanut butter", p: 20 },
+  { n: "Yogurt dip", p: 15 },
+  { n: "Extra paneer", p: 25 },
+  { n: "Chickpeas", p: 15 }
+];
 
-function paintBowl(el, spec) {
-  if (!el) return;
-  el.innerHTML = bowlMarkup(spec);
-}
+const state = { base: "mango", addons: new Set() };
 
-/* ── MENU UI ──────────────────────────────────── */
 const tabsEl = document.getElementById("menuTabs");
 const panelEl = document.getElementById("menuPanel");
+const baseChips = document.getElementById("baseChips");
+const addonChips = document.getElementById("addonChips");
+const buildImg = document.getElementById("buildImg");
+const buildName = document.getElementById("buildName");
+const buildList = document.getElementById("buildList");
+const buildTotal = document.getElementById("buildTotal");
+const addonCount = document.getElementById("addonCount");
+
 let activeCat = MENU[0].id;
 
+/* ── MENU UI ──────────────────────────────────── */
 function priceRange(cat) {
   const prices = cat.items.map((i) => i.p);
-  return `₹${Math.min(...prices)}–${Math.max(...prices)}`;
+  return `₹${Math.min(...prices)}–₹${Math.max(...prices)}`;
 }
 
 function buildTabs() {
@@ -228,42 +206,10 @@ function renderPanel() {
 }
 
 /* ── BUILD-YOUR-BOWL ──────────────────────────── */
-const BASES = [
-  { key: "mango", price: 149 },
-  { key: "banana", price: 129 },
-  { key: "choco", price: 149 },
-  { key: "berry", price: 159 }
-];
-
-const ADDONS = [
-  { n: "Extra banana", p: 15, colors: ["#f6e39a", "#f0d777"] },
-  { n: "Extra apple", p: 20, colors: ["#e0574f", "#a82f32", "#e8d98a"] },
-  { n: "Pomegranate", p: 20, colors: ["#c1273f", "#8e1526"] },
-  { n: "Mixed seeds", p: 20, chips: 7 },
-  { n: "Chia seeds", p: 15, chips: 4 },
-  { n: "Granola", p: 20, chips: 6 },
-  { n: "Oats", p: 15, chips: 3 },
-  { n: "Peanut butter", p: 20, colors: ["#d9a05b", "#a9762f"] },
-  { n: "Yogurt dip", p: 15, colors: ["#fdfaf1", "#e6dcc7"] },
-  { n: "Extra paneer", p: 25, colors: ["#fffaf0", "#e8dcc2"] },
-  { n: "Chickpeas", p: 15, colors: ["#e3c88a", "#c9a86a"] }
-];
-
-const state = { base: "mango", addons: new Set() };
-
-const baseChips = document.getElementById("baseChips");
-const addonChips = document.getElementById("addonChips");
-const buildBowlEl = document.getElementById("buildBowl");
-const buildName = document.getElementById("buildName");
-const buildList = document.getElementById("buildList");
-const buildTotal = document.getElementById("buildTotal");
-const addonCount = document.getElementById("addonCount");
-
 function renderBuildControls() {
   baseChips.innerHTML = BASES.map((b) => {
-    const bowl = BOWLS[b.key];
     return `<button class="chip" type="button" data-base="${b.key}" aria-pressed="${state.base === b.key}">
-      ${bowl.name.replace(" Bowl", "")}<b>₹${b.price}</b></button>`;
+      ${b.name.replace(" Bowl", "")}<b>₹${b.price}</b></button>`;
   }).join("");
 
   addonChips.innerHTML = ADDONS.map(
@@ -274,24 +220,24 @@ function renderBuildControls() {
 
 function renderBuild() {
   const base = BASES.find((b) => b.key === state.base);
-  const spec = { ...BOWLS[state.base] };
-  spec.colors = [...spec.colors];
-  spec.chips = spec.chips || 0;
   let total = base.price;
+  state.addons.forEach((i) => (total += ADDONS[i].p));
 
-  state.addons.forEach((i) => {
-    const a = ADDONS[i];
-    total += a.p;
-    if (a.colors) spec.colors = spec.colors.concat(a.colors);
-    if (a.chips) spec.chips += a.chips;
-  });
+  if (buildImg.getAttribute("src") !== base.img) {
+    buildImg.src = base.img;
+  }
+  buildImg.alt = base.alt;
+  if (!reduceMotion) {
+    buildImg.animate(
+      [{ opacity: 0.35, transform: "scale(0.985)" }, { opacity: 1, transform: "scale(1)" }],
+      { duration: 380, easing: "cubic-bezier(.19,1,.22,1)" }
+    );
+  }
 
-  paintBowl(buildBowlEl, spec);
-
-  buildName.textContent = spec.name;
+  buildName.textContent = base.name;
   buildTotal.textContent = `₹${total}`;
 
-  const rows = [`<li><span>${spec.name}</span><b>₹${base.price}</b></li>`];
+  const rows = [`<li><span>${base.name}</span><b>₹${base.price}</b></li>`];
   state.addons.forEach((i) => {
     rows.push(`<li><span>${ADDONS[i].n}</span><b>+₹${ADDONS[i].p}</b></li>`);
   });
@@ -299,13 +245,6 @@ function renderBuild() {
   buildList.innerHTML = rows.join("");
 
   addonCount.textContent = `${state.addons.size} selected`;
-
-  if (!reduceMotion && buildBowlEl) {
-    buildBowlEl.animate(
-      [{ transform: "scale(0.96)", opacity: 0.55 }, { transform: "scale(1)", opacity: 1 }],
-      { duration: 420, easing: "cubic-bezier(.19,1,.22,1)" }
-    );
-  }
 }
 
 function wireBuild() {
@@ -404,7 +343,7 @@ function scrollChrome() {
 /* ── REVEAL ───────────────────────────────────── */
 function reveal() {
   const targets = document.querySelectorAll(
-    ".section__head, .sig-card, .plan, .menu, .build__copy, .build__ticket, .story__lead, .story__big, .story__facts, .visit__card, .visit > div:first-child"
+    ".section__head, .sig-card, .plan, .menu, .build__copy, .build__ticket, .story__lead, .story__big, .story__facts, .story__shot, .visit__card, .visit > div:first-child"
   );
   if (reduceMotion || !("IntersectionObserver" in window)) return;
   targets.forEach((el, i) => {
@@ -427,25 +366,16 @@ function reveal() {
 
 /* ── BOOT ─────────────────────────────────────── */
 function init() {
-  document.querySelectorAll(".bowl[data-bowl]").forEach((el) => {
-    const spec = BOWLS[el.dataset.bowl];
-    if (spec) paintBowl(el, spec);
-  });
-
   buildTabs();
   renderPanel();
   wireBuild();
   renderBuildControls();
+  renderBuild();
 
   attachTilt(document.querySelectorAll("[data-tilt]"));
-
-  // subtle stage animation for the hero bowl, and tilt-on-hover for it
   heroParallax();
   scrollChrome();
   reveal();
-
-  const year = new Date().getFullYear();
-  document.querySelectorAll(".footer__small").forEach((el) => el.setAttribute("data-year", year));
 }
 
 if (document.readyState === "loading") {

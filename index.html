@@ -64,7 +64,10 @@
 
       <div class="hero__stage" data-tilt>
         <div class="hero__stack" data-depth="0.35">
-          <div class="bowl bowl--xl" data-bowl="tropical"></div>
+          <figure class="shot shot--hero">
+            <img src="./images/hero-bowl.jpg" alt="Overhead view of a bowl of freshly cut strawberries, kiwi, banana and orange segments" width="1100" height="1100" />
+          </figure>
+          <p class="hero__tag">Cut fresh at eight · layered to order</p>
         </div>
         <div class="orbit-chip chip-a" data-depth="1.4"><b>₹99</b><span>Tropical Fruit Bowl</span></div>
         <div class="orbit-chip chip-b" data-depth="1.9"><b>₹149</b><span>Quinoa Veggie Salad</span></div>
@@ -104,9 +107,9 @@
       </div>
 
       <div class="sig-grid">
-        <article class="sig-card" data-tilt data-bowl="mango">
+        <article class="sig-card" data-tilt>
           <div class="sig-card__stage">
-            <div class="bowl" data-bowl="mango"></div>
+            <img class="sig-card__img" src="./images/bowl-tropical.jpg" alt="Bowl of cut mango, berries, almonds and fresh herbs" loading="lazy" width="900" height="675" />
           </div>
           <div class="sig-card__body">
             <div class="sig-card__row">
@@ -119,9 +122,9 @@
           <span class="sig-card__index">A</span>
         </article>
 
-        <article class="sig-card" data-tilt data-bowl="banana">
+        <article class="sig-card" data-tilt>
           <div class="sig-card__stage">
-            <div class="bowl" data-bowl="banana"></div>
+            <img class="sig-card__img" src="./images/bowl-banana.jpg" alt="Top-down view of a bowl of sliced banana over chia pudding" loading="lazy" width="900" height="675" />
           </div>
           <div class="sig-card__body">
             <div class="sig-card__row">
@@ -134,24 +137,24 @@
           <span class="sig-card__index">B</span>
         </article>
 
-        <article class="sig-card" data-tilt data-bowl="choco">
+        <article class="sig-card" data-tilt>
           <div class="sig-card__stage">
-            <div class="bowl" data-bowl="choco"></div>
+            <img class="sig-card__img" src="./images/bowl-parfait.jpg" alt="Bowl of oats topped with strawberries, blueberries, kiwi and mint" loading="lazy" width="900" height="676" />
           </div>
           <div class="sig-card__body">
             <div class="sig-card__row">
-              <h3>Choco Banana Bowl</h3>
-              <span class="price">₹149</span>
+              <h3>Fruit &amp; Yogurt Parfait</h3>
+              <span class="price">₹109</span>
             </div>
-            <p>Banana, cocoa, oats, curd, chia, dark chocolate shavings.</p>
-            <ul class="tags"><li>Dessert-adjacent</li><li>310 g</li><li>Cocoa, not sugar</li></ul>
+            <p>Curd, oats, seasonal fruit, berries, almonds, honey.</p>
+            <ul class="tags"><li>Breakfast</li><li>360 g</li><li>No added sugar</li></ul>
           </div>
           <span class="sig-card__index">C</span>
         </article>
 
-        <article class="sig-card" data-tilt data-bowl="berry">
+        <article class="sig-card" data-tilt>
           <div class="sig-card__stage">
-            <div class="bowl" data-bowl="berry"></div>
+            <img class="sig-card__img" src="./images/bowl-fruit.jpg" alt="Close-up of a bowl of cut orange, kiwi, banana and strawberries with mint" loading="lazy" width="900" height="900" />
           </div>
           <div class="sig-card__body">
             <div class="sig-card__row">
@@ -211,7 +214,7 @@
 
       <aside class="build__ticket" data-tilt>
         <div class="ticket__stage">
-          <div class="bowl bowl--lg" id="buildBowl" data-bowl="mango"></div>
+          <img class="ticket__img" id="buildImg" src="./images/bowl-tropical.jpg" alt="Your selected bowl of cut fruit" width="900" height="675" />
         </div>
         <div class="ticket__body">
           <p class="ticket__label">Your bowl</p>
@@ -307,6 +310,12 @@
           <div><b>0</b><span>Artificial sweeteners</span></div>
         </div>
       </div>
+    </div>
+    <div class="wrap">
+      <figure class="story__shot">
+        <img src="./images/triptych.jpg" alt="Three bowls on a white surface topped with kiwi, strawberry, coconut, banana and granola" loading="lazy" width="1600" height="1067" />
+        <figcaption>Three of the morning bowls, straight from the counter</figcaption>
+      </figure>
     </div>
   </section>
 
