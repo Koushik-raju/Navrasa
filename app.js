@@ -129,10 +129,10 @@ const MENU = [
 
 /* ── BOWLS ON PHOTO ───────────────────────────── */
 const BASES = [
-  { key: "mango", name: "Mango Tropical Bowl", price: 149, img: "./images/bowl-tropical.jpg", alt: "Bowl of cut mango, berries, almonds and fresh herbs" },
-  { key: "banana", name: "Banana Crunch Bowl", price: 129, img: "./images/bowl-banana.jpg", alt: "Top-down view of a bowl of sliced banana over chia pudding" },
-  { key: "parfait", name: "Fruit & Yogurt Parfait", price: 109, img: "./images/bowl-parfait.jpg", alt: "Bowl of oats topped with strawberries, blueberries, kiwi and mint" },
-  { key: "berry", name: "Fruit & Granola Bowl", price: 159, img: "./images/bowl-fruit.jpg", alt: "Bowl of cut orange, kiwi, banana and strawberries with mint" }
+  { key: "tropical", name: "Tropical Fruit Bowl", price: 99, img: "./images/bowl-fruit.jpg", alt: "Close-up of a bowl of cut orange, kiwi, banana and strawberries with mint" },
+  { key: "banana", name: "Banana Crunch Bowl", price: 129, img: "./images/bowl-banana.jpg", alt: "Bowl of banana slices with peanut butter, chia seeds, raisins and peanuts" },
+  { key: "granola", name: "Fruit & Granola Bowl", price: 159, img: "./images/bowl-granola.jpg", alt: "Bowl of banana slices, strawberries and granola on a yogurt base" },
+  { key: "mango", name: "Mango Tropical Bowl", price: 149, img: "./images/bowl-tropical.jpg", alt: "Bowl of cut mango, berries and almonds with mint" }
 ];
 
 const ADDONS = [
@@ -149,7 +149,7 @@ const ADDONS = [
   { n: "Chickpeas", p: 15 }
 ];
 
-const state = { base: "mango", addons: new Set() };
+const state = { base: "tropical", addons: new Set() };
 
 const tabsEl = document.getElementById("menuTabs");
 const panelEl = document.getElementById("menuPanel");
@@ -264,7 +264,7 @@ function wireBuild() {
     renderBuild();
   });
   document.getElementById("buildReset").addEventListener("click", () => {
-    state.base = "mango";
+    state.base = "tropical";
     state.addons.clear();
     renderBuildControls();
     renderBuild();
