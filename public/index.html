@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Navrasa — Fresh Bowls &amp; More</title>
+  <meta name="description" content="Hand-cut fresh fruit bowls, made every morning and delivered to your door. Order a signature bowl or build your own." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&family=DM+Sans:wght@400;500;700&family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍓</text></svg>" />
+  <script type="importmap">
+    { "imports": {
+        "three": "/vendor/three/three.module.js",
+        "three/addons/": "/vendor/three/addons/"
+    } }
+  </script>
+</head>
+<body>
+  <header class="nav" id="nav">
+    <a href="#top" class="logo"><svg class="leaf" viewBox="0 0 40 28" aria-hidden="true"><path d="M19 26C8 25 3 17 4 6c9 0 16 6 15 20z" fill="#5aa832"/><path d="M21 26C21 13 28 4 38 2c1 12-6 23-17 24z" fill="#3f8f2a"/><path d="M20 26c0-8 3-14 9-19M19 26C17 19 13 14 7 10" stroke="#e9f5dc" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg><span class="wordmark">Navrasa</span></a>
+    <nav class="nav-links">
+      <a href="#menu">Menu</a>
+      <a href="#build">Build a bowl</a>
+      <a href="#how">How it works</a>
+      <a href="/track">Track order</a>
+    </nav>
+    <button class="cart-btn" id="cartBtn" aria-label="Open cart">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
+      <span>Cart</span><b id="cartCount">0</b>
+    </button>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="pill">Navrasa · Fresh Bowls &amp; More</span>
+        <h1>Fruit bowls that <em>taste like sunshine.</em></h1>
+        <p class="lead">Hand-cut seasonal fruit, no added sugar, packed within an hour of delivery. Pick a signature bowl or build your own in 3D.</p>
+        <div class="hero-cta">
+          <a href="#menu" class="btn btn-primary">Order now</a>
+          <a href="#build" class="btn btn-ghost">Build your bowl →</a>
+        </div>
+        <ul class="hero-stats">
+          <li><b>11</b><span>fresh fruits</span></li>
+          <li><b>0g</b><span>added sugar</span></li>
+          <li><b>2-hr</b><span>delivery slots</span></li>
+        </ul>
+      </div>
+      <div class="hero-stage">
+        <canvas id="heroCanvas" aria-label="3D fruit bowl"></canvas>
+        <div class="stage-fallback" id="heroFallback"><img src="/img/hero-cup.webp" alt="Navrasa fresh fruit bowl" style="max-width:100%;max-height:100%;object-fit:contain" /></div>
+        <span class="drag-hint">drag to turn</span>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee" aria-hidden="true"><div>
+      🍓 Strawberry · 🥝 Kiwi · 🥭 Mango · 🍍 Pineapple · 🍌 Banana · 🫐 Blueberry · 🍇 Grapes · 🍊 Orange · 🍎 Apple · 🍉 Watermelon · 🍒 Pomegranate ·
+      🍓 Strawberry · 🥝 Kiwi · 🥭 Mango · 🍍 Pineapple · 🍌 Banana · 🫐 Blueberry · 🍇 Grapes · 🍊 Orange · 🍎 Apple · 🍉 Watermelon · 🍒 Pomegranate ·
+    </div></div>
+
+    <!-- MENU -->
+    <section class="section" id="menu">
+      <div class="section-head">
+        <span class="eyebrow">Signature bowls</span>
+        <h2>Our menu</h2>
+        <p>Every bowl is ~450g of fruit, cut the morning of delivery.</p>
+      </div>
+      <div class="menu-grid" id="menuGrid"><p class="muted">Loading menu…</p></div>
+    </section>
+
+    <!-- BUILDER -->
+    <section class="section builder" id="build">
+      <div class="section-head">
+        <span class="eyebrow">Your bowl, your rules</span>
+        <h2>Build your own</h2>
+        <p>Pick 2–8 fruits and watch them land in your bowl.</p>
+      </div>
+      <div class="builder-wrap">
+        <div class="builder-stage">
+          <canvas id="builderCanvas" aria-label="3D custom bowl preview"></canvas>
+          <div class="stage-fallback" id="builderFallback">🥣</div>
+          <div class="builder-empty" id="builderEmpty">Tap a fruit to start →</div>
+        </div>
+        <div class="builder-panel">
+          <h3>Fruits <small id="fruitCount">0 / 8</small></h3>
+          <div class="chips" id="fruitChips"></div>
+          <h3>Toppings <small>optional</small></h3>
+          <div class="chips" id="toppingChips"></div>
+          <div class="builder-total">
+            <div><span class="muted">Your bowl</span><b id="builderPrice">—</b></div>
+            <div class="qty" data-qty="builder">
+              <button type="button" data-d="-1" aria-label="Fewer">−</button><span id="builderQty">1</span><button type="button" data-d="1" aria-label="More">+</button>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-block" id="addCustom" disabled>Add custom bowl to cart</button>
+          <button class="link-btn" id="clearCustom" type="button">Clear selection</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW -->
+    <section class="section" id="how">
+      <div class="section-head"><span class="eyebrow">Simple</span><h2>How it works</h2></div>
+      <div class="steps">
+        <div class="step"><b>1</b><h4>Pick your bowl</h4><p>Choose a signature bowl or design your own from 11 fruits and 6 toppings.</p></div>
+        <div class="step"><b>2</b><h4>Choose a slot</h4><p>Schedule delivery up to 14 days ahead in a 2-hour window that suits you.</p></div>
+        <div class="step"><b>3</b><h4>We cut it fresh</h4><p>Your fruit is washed, cut and packed within an hour of leaving our kitchen.</p></div>
+        <div class="step"><b>4</b><h4>Pay on delivery</h4><p>Cash, UPI or card at your door. Track your order anytime with your order ID.</p></div>
+      </div>
+    </section>
+
+    <section class="section cta-band">
+      <h2>Healthy never looked this good.</h2>
+      <a href="#menu" class="btn btn-light">Start your order</a>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div><b class="logo"><svg class="leaf" viewBox="0 0 40 28" aria-hidden="true"><path d="M19 26C8 25 3 17 4 6c9 0 16 6 15 20z" fill="#5aa832"/><path d="M21 26C21 13 28 4 38 2c1 12-6 23-17 24z" fill="#3f8f2a"/><path d="M20 26c0-8 3-14 9-19M19 26C17 19 13 14 7 10" stroke="#e9f5dc" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg><span class="wordmark">Navrasa</span></b><p class="muted">Fresh Bowls &amp; More</p></div>
+    <div><a href="/track">Track an order</a><a href="#menu">Menu</a><a href="#build">Build a bowl</a></div>
+    <p class="muted small">© <span id="year"></span> Navrasa. All rights reserved.</p>
+  </footer>
+
+  <!-- CART DRAWER -->
+  <div class="overlay" id="overlay"></div>
+  <aside class="drawer" id="drawer" aria-label="Cart" aria-hidden="true">
+    <div class="drawer-head"><h3>Your cart</h3><button class="icon-btn" data-close aria-label="Close">✕</button></div>
+    <div class="drawer-body" id="cartItems"></div>
+    <div class="drawer-foot">
+      <div class="row"><span>Subtotal</span><b id="cartSubtotal">—</b></div>
+      <div class="row"><span>Delivery</span><b id="cartDelivery">—</b></div>
+      <p class="muted small" id="freeHint"></p>
+      <div class="row total"><span>Total</span><b id="cartTotal">—</b></div>
+      <button class="btn btn-primary btn-block" id="checkoutBtn">Checkout</button>
+    </div>
+  </aside>
+
+  <!-- CHECKOUT -->
+  <div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="coTitle" hidden>
+    <form class="modal-card" id="checkoutForm" novalidate>
+      <div class="drawer-head"><h3 id="coTitle">Delivery details</h3><button type="button" class="icon-btn" data-close aria-label="Close">✕</button></div>
+      <div class="form-grid">
+        <label>Full name*<input name="name" required maxlength="80" autocomplete="name" /></label>
+        <label>Phone*<input name="phone" required maxlength="20" inputmode="tel" autocomplete="tel" placeholder="+91 98765 43210" /></label>
+        <label class="span2">Email <span class="muted">(optional)</span><input name="email" type="email" maxlength="120" autocomplete="email" /></label>
+        <label class="span2">Delivery address*<textarea name="address" required maxlength="300" rows="2" autocomplete="street-address" placeholder="House no., street, area, landmark, city, PIN"></textarea></label>
+        <label>Delivery date*<input name="date" type="date" required /></label>
+        <label>Time slot*<select name="slot" required id="slotSelect"></select></label>
+        <fieldset class="span2"><legend>Payment (on delivery)</legend>
+          <div class="radios">
+            <label><input type="radio" name="payment" value="cash" checked /> Cash</label>
+            <label><input type="radio" name="payment" value="upi-on-delivery" /> UPI</label>
+            <label><input type="radio" name="payment" value="card-on-delivery" /> Card</label>
+          </div>
+        </fieldset>
+        <label class="span2">Notes for us <span class="muted">(allergies, gate code…)</span><textarea name="notes" maxlength="500" rows="2"></textarea></label>
+      </div>
+      <div class="co-summary" id="coSummary"></div>
+      <p class="form-error" id="coError" role="alert"></p>
+      <button class="btn btn-primary btn-block" type="submit" id="placeOrder">Place order</button>
+    </form>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="modal" id="successModal" role="dialog" aria-modal="true" hidden>
+    <div class="modal-card success">
+      <div class="big-emoji">🎉</div>
+      <h3>Order placed!</h3>
+      <p>Your order ID is</p>
+      <div class="order-id" id="successId"></div>
+      <p class="muted" id="successInfo"></p>
+      <p class="muted small">Save this ID — you can track your order with it and your phone number.</p>
+      <div class="hero-cta center">
+        <a class="btn btn-primary" id="successTrack" href="/track">Track order</a>
+        <button class="btn btn-ghost" data-close>Back to shop</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

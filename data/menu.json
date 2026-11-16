@@ -1,0 +1,37 @@
+{
+  "currency": "₹",
+  "deliveryFee": 30,
+  "freeDeliveryAbove": 499,
+  "bowls": [
+    { "id": "sunrise", "name": "Sunrise Citrus", "description": "Orange, mango, pineapple and kiwi with a squeeze of lime and mint.", "price": 199, "calories": 260, "tag": "Bestseller", "fruits": ["orange", "mango", "pineapple", "kiwi"], "available": true },
+    { "id": "berry-blast", "name": "Berry Blast", "description": "Strawberries, blueberries, grapes and pomegranate pearls on Greek yogurt.", "price": 249, "calories": 310, "tag": "Antioxidant", "fruits": ["strawberry", "blueberry", "grapes", "pomegranate"], "available": true },
+    { "id": "tropical", "name": "Tropical Escape", "description": "Mango, pineapple, banana and watermelon with toasted coconut flakes.", "price": 229, "calories": 290, "tag": "Summer", "fruits": ["mango", "pineapple", "banana", "watermelon"], "available": true },
+    { "id": "green-detox", "name": "Green Detox", "description": "Kiwi, green apple, grapes and banana with chia seeds and a honey drizzle.", "price": 219, "calories": 240, "tag": "Detox", "fruits": ["kiwi", "apple", "grapes", "banana"], "available": true },
+    { "id": "protein-power", "name": "Protein Power", "description": "Banana, strawberry and blueberry over yogurt with granola and peanut butter.", "price": 279, "calories": 420, "tag": "Gym", "fruits": ["banana", "strawberry", "blueberry", "apple"], "available": true },
+    { "id": "rainbow", "name": "Rainbow Royale", "description": "A bit of everything: seven fruits, every colour, made fresh each morning.", "price": 299, "calories": 340, "tag": "Signature", "fruits": ["strawberry", "orange", "mango", "kiwi", "blueberry", "grapes", "pomegranate"], "available": true }
+  ],
+  "custom": {
+    "basePrice": 99,
+    "fruits": [
+      { "id": "banana", "name": "Banana", "price": 20 },
+      { "id": "strawberry", "name": "Strawberry", "price": 40 },
+      { "id": "blueberry", "name": "Blueberry", "price": 50 },
+      { "id": "kiwi", "name": "Kiwi", "price": 35 },
+      { "id": "mango", "name": "Mango", "price": 35 },
+      { "id": "apple", "name": "Apple", "price": 25 },
+      { "id": "orange", "name": "Orange", "price": 25 },
+      { "id": "grapes", "name": "Grapes", "price": 30 },
+      { "id": "pomegranate", "name": "Pomegranate", "price": 40 },
+      { "id": "pineapple", "name": "Pineapple", "price": 30 },
+      { "id": "watermelon", "name": "Watermelon", "price": 20 }
+    ],
+    "toppings": [
+      { "id": "honey", "name": "Honey drizzle", "price": 15 },
+      { "id": "granola", "name": "Granola", "price": 25 },
+      { "id": "chia", "name": "Chia seeds", "price": 20 },
+      { "id": "yogurt", "name": "Greek yogurt", "price": 35 },
+      { "id": "coconut", "name": "Coconut flakes", "price": 15 },
+      { "id": "nuts", "name": "Mixed nuts", "price": 30 }
+    ]
+  }
+}

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Navrasa Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;700&family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/admin.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
+</head>
+<body>
+  <!-- LOGIN -->
+  <section id="login" class="login" hidden>
+    <form id="loginForm" class="login-card">
+      <div class="brand"><svg class="leaf" viewBox="0 0 40 28" aria-hidden="true"><path d="M19 26C8 25 3 17 4 6c9 0 16 6 15 20z" fill="#5aa832"/><path d="M21 26C21 13 28 4 38 2c1 12-6 23-17 24z" fill="#3f8f2a"/><path d="M20 26c0-8 3-14 9-19M19 26C17 19 13 14 7 10" stroke="#e9f5dc" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg><span class="wordmark">Navrasa</span> <small>Admin</small></div>
+      <p class="muted">Staff only. Enter the admin password.</p>
+      <input type="password" name="password" placeholder="Password" autocomplete="current-password" required autofocus />
+      <p class="err" id="loginErr"></p>
+      <button class="btn primary" type="submit">Sign in</button>
+    </form>
+  </section>
+
+  <!-- APP -->
+  <div id="app" class="app" hidden>
+    <aside class="side">
+      <div class="brand"><svg class="leaf" viewBox="0 0 40 28" aria-hidden="true"><path d="M19 26C8 25 3 17 4 6c9 0 16 6 15 20z" fill="#5aa832"/><path d="M21 26C21 13 28 4 38 2c1 12-6 23-17 24z" fill="#3f8f2a"/><path d="M20 26c0-8 3-14 9-19M19 26C17 19 13 14 7 10" stroke="#e9f5dc" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg><span class="wordmark">Navrasa</span> <small>Admin</small></div>
+      <nav>
+        <button data-view="dashboard" class="active"><span>📊</span>Dashboard</button>
+        <button data-view="orders"><span>🧾</span>Orders <b id="openBadge" class="nbadge" hidden></b></button>
+        <button data-view="customers"><span>👥</span>Customers</button>
+        <button data-view="menu"><span>🥣</span>Menu &amp; prices</button>
+      </nav>
+      <div class="side-foot">
+        <a class="btn ghost sm" href="/api/admin/export.csv">⬇ Orders CSV</a>
+        <a class="btn ghost sm" href="/api/admin/orders.md">⬇ orders.md</a>
+        <a class="btn ghost sm" href="/" target="_blank" rel="noopener">↗ View shop</a>
+        <button class="btn ghost sm" id="logout">Sign out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <h1 id="viewTitle">Dashboard</h1>
+        <div class="topbar-r">
+          <span class="live"><i></i> Live · <span id="lastSync">—</span></span>
+          <button class="btn sm" id="refresh">↻ Refresh</button>
+        </div>
+      </header>
+
+      <!-- DASHBOARD -->
+      <section data-panel="dashboard">
+        <div class="kpis" id="kpis"></div>
+        <div class="grid2">
+          <div class="card span2">
+            <div class="card-h"><h3>Revenue · last 14 days</h3><span class="muted" id="revSum"></span></div>
+            <div id="revChart" class="chart"></div>
+          </div>
+          <div class="card">
+            <div class="card-h"><h3>Orders by status</h3></div>
+            <div id="statusBars"></div>
+          </div>
+          <div class="card">
+            <div class="card-h"><h3>Best sellers</h3></div>
+            <div id="topProducts"></div>
+          </div>
+          <div class="card">
+            <div class="card-h"><h3>Most-loved fruits</h3></div>
+            <div id="fruitBars"></div>
+          </div>
+          <div class="card">
+            <div class="card-h"><h3>Delivery slot demand</h3></div>
+            <div id="slotBars"></div>
+          </div>
+          <div class="card span2">
+            <div class="card-h"><h3>Recent orders</h3><button class="link" data-goto="orders">View all →</button></div>
+            <div id="recent"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ORDERS -->
+      <section data-panel="orders" hidden>
+        <div class="toolbar">
+          <div class="tabs" id="statusTabs"></div>
+          <div class="filters">
+            <input type="search" id="search" placeholder="Search ID, name, phone, address…" />
+            <select id="dateFilter">
+              <option value="">All delivery dates</option>
+              <option value="today">Delivering today</option>
+              <option value="tomorrow">Delivering tomorrow</option>
+              <option value="upcoming">Upcoming</option>
+              <option value="past">Past</option>
+            </select>
+          </div>
+        </div>
+        <div class="card flush">
+          <div class="table-wrap"><table class="tbl" id="ordersTable">
+            <thead><tr><th>Order</th><th>Placed</th><th>Customer</th><th>Delivery</th><th>Items</th><th class="r">Total</th><th>Status</th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+          <p class="empty" id="ordersEmpty" hidden>No orders match.</p>
+        </div>
+      </section>
+
+      <!-- CUSTOMERS -->
+      <section data-panel="customers" hidden>
+        <div class="card flush">
+          <div class="table-wrap"><table class="tbl" id="custTable">
+            <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th class="r">Orders</th><th class="r">Total spent</th><th>Last order</th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+          <p class="empty" id="custEmpty" hidden>No customers yet.</p>
+        </div>
+      </section>
+
+      <!-- MENU -->
+      <section data-panel="menu" hidden>
+        <div class="card">
+          <div class="card-h"><h3>Delivery &amp; currency</h3></div>
+          <div class="settings-row">
+            <label>Currency symbol<input id="mCurrency" maxlength="4" /></label>
+            <label>Delivery fee<input id="mFee" type="number" min="0" step="1" /></label>
+            <label>Free delivery above<input id="mFree" type="number" min="0" step="1" /></label>
+            <label>Custom bowl base price<input id="mBase" type="number" min="0" step="1" /></label>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>Signature bowls</h3><button class="btn sm" id="addBowl">+ Add bowl</button></div>
+          <div id="bowlEditor"></div>
+        </div>
+        <div class="grid2">
+          <div class="card"><div class="card-h"><h3>Custom fruit prices</h3></div><div id="fruitPrices" class="price-list"></div></div>
+          <div class="card"><div class="card-h"><h3>Topping prices</h3></div><div id="topPrices" class="price-list"></div></div>
+        </div>
+        <div class="savebar"><span class="muted" id="menuMsg">Changes go live on the shop as soon as you save.</span><button class="btn primary" id="saveMenu">Save menu</button></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ORDER DETAIL -->
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="detail" id="detail" aria-hidden="true"></aside>
+
+  <div class="toast" id="toast"></div>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

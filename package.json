@@ -1,0 +1,12 @@
+{
+  "name": "bowlful-fruit-bowls",
+  "version": "1.0.0",
+  "description": "3D fruit bowl shop with ordering and an admin dashboard. Zero dependencies.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": { "node": ">=18" },
+  "license": "UNLICENSED",
+  "private": true
+}

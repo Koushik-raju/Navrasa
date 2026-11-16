@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Track Your Order — Navrasa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&family=DM+Sans:wght@400;500;700&family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍓</text></svg>" />
+</head>
+<body>
+  <header class="nav scrolled">
+    <a href="/" class="logo"><svg class="leaf" viewBox="0 0 40 28" aria-hidden="true"><path d="M19 26C8 25 3 17 4 6c9 0 16 6 15 20z" fill="#5aa832"/><path d="M21 26C21 13 28 4 38 2c1 12-6 23-17 24z" fill="#3f8f2a"/><path d="M20 26c0-8 3-14 9-19M19 26C17 19 13 14 7 10" stroke="#e9f5dc" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg><span class="wordmark">Navrasa</span></a>
+    <a href="/#menu" class="btn btn-primary add-btn">Order a bowl</a>
+  </header>
+  <main class="track-page">
+    <div class="track-card">
+      <span class="eyebrow">Order status</span>
+      <h2>Track your order</h2>
+      <p class="muted">Enter the order ID from your confirmation and the phone number you ordered with.</p>
+      <form class="track-form" id="trackForm">
+        <input name="id" placeholder="Order ID, e.g. FB-261116-A1B2" required autocomplete="off" style="text-transform:uppercase" />
+        <input name="phone" placeholder="Phone number" required inputmode="tel" />
+        <button class="btn btn-primary" type="submit">Track</button>
+      </form>
+      <p class="form-error" id="trackError" style="margin:0"></p>
+      <div id="result"></div>
+    </div>
+  </main>
+  <script src="/js/track.js"></script>
+</body>
+</html>
