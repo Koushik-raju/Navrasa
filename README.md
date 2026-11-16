@@ -17,13 +17,13 @@ Then open:
 | Track an order | http://localhost:3000/track | Customers |
 | Admin dashboard | http://localhost:3000/admin | You (password protected) |
 
-Optional: `PORT=8080` to change the port. If `ADMIN_PASSWORD` is not set the default is `admin123` — **always set it before going live.**
+Optional: `PORT=8080` to change the port. The local server is `dev-server.js` (`npm start`). If `ADMIN_PASSWORD` is not set the default is `admin123` — **always set it before going live.**
 
 ## Where orders are stored
 
 | File | What it is |
 |---|---|
-| `data/orders.json` | Source of truth — every order with customer, items, totals, status history. |
+| `data/orders.json` | (file mode) Source of truth — every order with customer, items, totals, status history. |
 | `data/orders.md` | Human-readable Markdown log, rewritten automatically after every new order or status change. |
 | `data/menu.json` | Bowls, prices, custom-bowl fruit/topping prices, delivery fee. Editable from the admin panel. |
 
@@ -59,7 +59,16 @@ Back up the `data/` folder regularly. You can also download orders as **CSV** (o
 - **Delivery slots / payment methods:** `SLOTS` and `PAYMENTS` at the top of `server.js`.
 - **Colours & fonts:** CSS variables at the top of `public/css/styles.css`.
 
-## Deploying
+## Deploy on Vercel
+
+1. Import the GitHub repo in Vercel (framework preset: **Other**, no build command). `vercel.json` already serves `public/` as the site and `api/index.js` as the API.
+2. **Settings → Environment Variables:** add `ADMIN_PASSWORD` (and optionally `SESSION_SECRET`, any long random string).
+3. **Storage → Create Database → Upstash (Redis)** (free tier is fine) → connect it to this project. Vercel adds `KV_REST_API_URL` / `KV_REST_API_TOKEN` automatically; the app detects them.
+4. **Redeploy** (Deployments → ⋯ → Redeploy) so the new variables are picked up.
+
+On Vercel, orders, the menu and uploaded photos are stored in Redis (Vercel's own disk is read-only). Download them any time from the admin panel as **CSV** or **orders.md**. Without the database the shop still loads, but checkout shows a "storage not set up" message and the admin panel shows a yellow warning.
+
+## Deploy elsewhere (Render, Railway, VPS)
 
 Any host that runs Node and keeps files on disk works (a VPS, Railway/Render with a persistent disk, etc.). Put it behind HTTPS (e.g. Caddy or Nginx). Serverless hosts with read-only/ephemeral filesystems will lose `data/` — use a persistent volume there.
 

@@ -66,6 +66,8 @@
       }
       knownIds = ids;
       orders = o.orders; stats = s;
+      const warn = $('#storageWarn');
+      if (warn) warn.hidden = s.storage !== 'unconfigured';
       $('#lastSync').textContent = new Date().toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit', second: '2-digit' });
       render();
       if (openId) { const ord = orders.find(x => x.id === openId); if (ord) renderDetail(ord); }
@@ -321,13 +323,25 @@
     menuDirty = true; $('#menuMsg').textContent = '● Unsaved changes — new bowls start out of stock';
   };
   function restoreCustom(c) { c.fruits.forEach(f => { const el = $(`[data-fp="${f.id}"]`); if (el) el.value = f.price; }); c.toppings.forEach(t => { const el = $(`[data-tp="${t.id}"]`); if (el) el.value = t.price; }); $('#mBase').value = c.basePrice; }
+  // resize photos in the browser (max 1600px) so uploads are small and fast, whatever the host
+  async function shrinkImage(file, max = 1600) {
+    const bmp = await createImageBitmap(file).catch(() => null);
+    if (!bmp) return file;
+    const k = Math.min(1, max / Math.max(bmp.width, bmp.height));
+    const c = document.createElement('canvas'); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    const out = await new Promise(r => c.toBlob(r, 'image/webp', 0.86));
+    if (out && out.type === 'image/webp') return out;
+    return await new Promise(r => c.toBlob(r, 'image/jpeg', 0.86));
+  }
   $('#bowlEditor').addEventListener('change', async e => {
     const inp = e.target.closest('[data-upload]'); if (!inp || !inp.files[0]) return;
     const row = inp.closest('.bowl-row'), f = inp.files[0];
-    if (f.size > 6 * 1024 * 1024) { toast('Image too large (max 6 MB)'); return; }
+    if (f.size > 25 * 1024 * 1024) { toast('Image too large (max 25 MB)'); return; }
     $('.photo-thumb', row).innerHTML = '<span>Uploading…</span>';
     try {
-      const res = await fetch('/api/admin/upload', { method: 'POST', headers: { 'Content-Type': f.type }, body: f });
+      const blob = await shrinkImage(f);
+      const res = await fetch('/api/admin/upload', { method: 'POST', headers: { 'Content-Type': blob.type }, body: blob });
       const d = await res.json(); if (!res.ok) throw new Error(d.error || 'Upload failed');
       row.dataset.image = d.url; $('.photo-thumb', row).innerHTML = `<img src="${d.url}" alt="" />`;
       menuDirty = true; $('#menuMsg').textContent = '● Photo uploaded — click Save menu to publish it';

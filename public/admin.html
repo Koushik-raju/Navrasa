@@ -50,6 +50,10 @@
         </div>
       </header>
 
+      <div class="storage-warn" id="storageWarn" hidden>
+        <b>Orders can't be saved yet.</b> This site is running on Vercel without a database. In your Vercel project open
+        <b>Storage → Create / Connect → Upstash (Redis)</b>, connect it to this project, then redeploy. Customers can browse, but checkout will show an error until then.
+      </div>
       <!-- DASHBOARD -->
       <section data-panel="dashboard">
         <div class="kpis" id="kpis"></div>

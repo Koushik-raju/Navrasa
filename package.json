@@ -1,12 +1,15 @@
 {
-  "name": "bowlful-fruit-bowls",
+  "name": "navrasa-shop",
   "version": "1.0.0",
-  "description": "3D fruit bowl shop with ordering and an admin dashboard. Zero dependencies.",
-  "main": "server.js",
+  "description": "Navrasa fresh fruit bowls: 3D storefront, ordering, tracking and admin dashboard. Runs on Vercel or any Node host.",
+  "main": "dev-server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node dev-server.js",
+    "dev": "node dev-server.js"
   },
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "license": "UNLICENSED",
   "private": true
 }
