@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300..800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="./styles.css" />
+<link rel="stylesheet" href="./shop.css" />
 </head>
 <body>
 <div class="grain" aria-hidden="true"></div>
@@ -24,11 +25,17 @@
   <nav class="nav__links" aria-label="Primary">
     <a href="#signature">Signatures</a>
     <a href="#menu">Menu</a>
-    <a href="#build">Build</a>
+    <a href="#menu">Customise</a>
     <a href="#plans">Plans</a>
+      <a href="/cart">Cart</a>
+      <a href="/admin">Orders dashboard</a>
     <a href="#visit">Visit</a>
   </nav>
-  <a class="btn btn--sm" href="#menu">Order now <span aria-hidden="true">↗</span></a>
+  <a class="cart-btn" href="/cart" aria-label="View cart">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16l-1.4 11.2a2 2 0 0 1-2 1.8H7.4a2 2 0 0 1-2-1.8L4 7Z" stroke="currentColor" stroke-width="1.6"/><path d="M9 7a3 3 0 0 1 6 0" stroke="currentColor" stroke-width="1.6"/></svg>
+    <span class="cart-btn__label">Cart</span>
+    <span class="cart-btn__count" data-cart-count>0</span>
+  </a>
 </header>
 
 <main id="top">
@@ -53,7 +60,7 @@
         </p>
         <div class="hero__cta">
           <a class="btn" href="#menu">Explore the menu <span aria-hidden="true">↘</span></a>
-          <a class="btn btn--ghost" href="#build">Build your bowl</a>
+          <a class="btn btn--ghost" href="#menu">Customise a bowl</a>
         </div>
         <dl class="stats">
           <div><dt>Bowls on the sheet</dt><dd>40<span>+</span></dd></div>
@@ -191,52 +198,11 @@
     </div>
   </section>
 
-  <!-- ── BUILD YOUR BOWL ───────────────────────────────── -->
-  <section class="section section--build" id="build">
-    <div class="wrap build">
-      <div class="build__copy">
-        <p class="eyebrow"><span class="dot"></span> 03 — Play with it</p>
-        <h2 class="display h2">Build the bowl<br /> you actually <em>want.</em></h2>
-        <p class="section__note">
-          Start with a base, then add as much as you like. The price and the bowl update as you go —
-          this is exactly how the counter takes your order.
-        </p>
-
-        <div class="build__controls">
-          <fieldset class="field">
-            <legend>1 · Choose a base</legend>
-            <div class="chips" id="baseChips"></div>
-          </fieldset>
-          <fieldset class="field">
-            <legend>2 · Add-ons <span id="addonCount" class="muted">0 selected</span></legend>
-            <div class="chips chips--add" id="addonChips"></div>
-          </fieldset>
-        </div>
-      </div>
-
-      <aside class="build__ticket" data-tilt>
-        <div class="ticket__stage">
-          <img class="ticket__img" id="buildImg" src="./images/bowl-tropical.jpg" alt="Your selected bowl of cut fruit" width="900" height="675" />
-        </div>
-        <div class="ticket__body">
-          <p class="ticket__label">Your bowl</p>
-          <h3 id="buildName">Mango Tropical Bowl</h3>
-          <ul class="ticket__list" id="buildList"></ul>
-          <div class="ticket__total">
-            <span>Total</span>
-            <b id="buildTotal">₹149</b>
-          </div>
-          <button class="btn btn--wide" id="buildReset" type="button">Reset the bowl</button>
-        </div>
-      </aside>
-    </div>
-  </section>
-
   <!-- ── PLANS ─────────────────────────────────────────── -->
   <section class="section" id="plans">
     <div class="wrap">
       <div class="section__head">
-        <p class="eyebrow"><span class="dot"></span> 04 — Repeat offenders</p>
+        <p class="eyebrow"><span class="dot"></span> 03 — Repeat offenders</p>
         <h2 class="display h2">Five days.<br /> One <em>habit.</em></h2>
         <p class="section__note">Prepaid plans, picked up daily. Cheaper per bowl than ordering à la carte.</p>
       </div>
@@ -297,7 +263,7 @@
   <section class="section section--story">
     <div class="wrap story">
       <div class="story__lead">
-        <p class="eyebrow"><span class="dot"></span> 05 — Why it tastes like that</p>
+        <p class="eyebrow"><span class="dot"></span> 04 — Why it tastes like that</p>
         <h2 class="display h2">Cheap fruit tastes<br /> like <em>cheap fruit.</em></h2>
       </div>
       <div class="story__cols">
@@ -325,7 +291,7 @@
   <section class="section section--visit" id="visit">
     <div class="wrap visit">
       <div>
-        <p class="eyebrow"><span class="dot"></span> 06 — Come by</p>
+        <p class="eyebrow"><span class="dot"></span> 05 — Come by</p>
         <h2 class="display h2">The counter<br /> opens at <em>eight.</em></h2>
         <p class="section__note">Walk in, or send the order ahead. Bowls are assembled when you arrive, never before.</p>
       </div>
@@ -340,6 +306,9 @@
   </section>
 </main>
 
+
+
+
 <footer class="footer">
   <div class="wrap footer__grid">
     <div>
@@ -349,14 +318,17 @@
     <nav class="footer__links" aria-label="Footer">
       <a href="#signature">Signatures</a>
       <a href="#menu">Menu</a>
-      <a href="#build">Build a bowl</a>
+      <a href="/cart">Cart</a>
       <a href="#plans">Plans</a>
       <a href="#visit">Visit</a>
+      <a href="/admin">Orders dashboard</a>
     </nav>
     <p class="footer__small">Costs are estimates from the kitchen sheet. Actual yields and packaging vary before selling.</p>
   </div>
 </footer>
 
+<script src="./catalog.js"></script>
 <script src="./app.js"></script>
+<script src="./shop.js"></script>
 </body>
 </html>

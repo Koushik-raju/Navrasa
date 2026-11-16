@@ -1,0 +1,10 @@
+{
+  "name": "navrasa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NAVRASA fruit bowls — storefront, checkout and order dashboard",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  }
+}
