@@ -26,7 +26,14 @@
         <p>Fruit bowls, salads, smoothies — all customisable down to the ingredient.</p>
         <a class="btn" href="/#menu">Browse the menu</a>
       </div>`;
-      summary.innerHTML = "";
+      summary.innerHTML = `
+        <h2>Order summary</h2>
+        <div class="summary__row"><span>Subtotal</span><b>${NAV.money(0)}</b></div>
+        <div class="summary__row"><span>Delivery</span><b>${NAV.money(0)}</b></div>
+        <div class="summary__row"><span>Items</span><b>0</b></div>
+        <div class="summary__total"><span>Total</span><b>${NAV.money(0)}</b></div>
+        <a class="btn btn--wide" href="/#menu">Browse the menu</a>
+        <p class="summary__note">Nothing here yet — add a bowl to see delivery and total.</p>`;
       $("#addonPanel-wrap")?.setAttribute("hidden", "");
       return;
     }

@@ -258,6 +258,8 @@
     document.body.appendChild(drawer);
     drawer.addEventListener("click", (e) => {
       if (e.target.closest("[data-close-drawer]")) return closeAll();
+      // any link inside the drawer closes it first, so the page behind is usable
+      if (e.target.closest("a[href]")) return closeAll();
       const inc = e.target.closest("[data-inc]");
       if (inc) {
         const key = inc.dataset.inc;
@@ -284,6 +286,8 @@
   function renderDrawer() {
     if (!drawer) return;
     const cart = NAV.readCart();
+    const total = $("[data-subtotal]", drawer);
+    if (total) total.textContent = NAV.money(NAV.cartSubtotal(cart));
     const body = $("#drawerBody", drawer);
     if (!cart.length) {
       body.innerHTML = `<div class="empty">

@@ -66,15 +66,21 @@
     const placed = when(order.createdAt);
     const slotDate = new Date(`${order.date}T12:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
     return `<article class="order-card${open ? " is-open" : ""}" data-code="${order.code}">
-      <button class="order-card__top" type="button" data-toggle="${order.code}">
-        <span class="order-card__code">${order.code}</span>
-        <span class="pill pill--${order.payment}">${order.payment === "cod" ? "COD" : "Online"}</span>
-        <span class="order-card__when">${order.name} · ${order.phone}</span>
-        <span class="order-card__spacer"></span>
-        <span class="order-card__when">${slotDate} · ${order.slot}</span>
-        <span class="order-card__total">${money(order.total)}</span>
-        <span class="pill pill--${order.status}">${LABELS[order.status]}</span>
-      </button>
+      <div class="order-card__top">
+        <button class="order-card__toggle" type="button" data-toggle="${order.code}">
+          <span class="order-card__code">${order.code}</span>
+          <span class="pill pill--${order.payment}">${order.payment === "cod" ? "COD" : "Online"}</span>
+          <span class="order-card__when">${order.name} · ${order.phone}</span>
+          <span class="order-card__spacer"></span>
+          <span class="order-card__when">${slotDate} · ${order.slot}</span>
+          <span class="order-card__total">${money(order.total)}</span>
+          <span class="pill pill--${order.status}">${LABELS[order.status]}</span>
+        </button>
+        <button class="copy-btn" type="button" data-copy="${order.code}" title="Copy order ID" aria-label="Copy order ID ${order.code}">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M15 5.5A1.5 1.5 0 0 0 13.5 4h-8A1.5 1.5 0 0 0 4 5.5v8A1.5 1.5 0 0 0 5.5 15" stroke="currentColor" stroke-width="1.6"/></svg>
+          Copy ID
+        </button>
+      </div>
       <div class="order-card__body">
         <div class="details">
           <div><span>Placed</span><b>${placed}</b></div>
@@ -114,7 +120,7 @@
     return orders.filter((o) => {
       if (filter !== "all" && o.status !== filter) return false;
       if (!query) return true;
-      const hay = `${o.code} ${o.name} ${o.phone}`.toLowerCase();
+      const hay = `${o.code} ${o.name} ${o.phone} ${o.address} ${o.payment} ${o.status} ${o.date}`.toLowerCase();
       return hay.includes(query);
     });
   }
@@ -163,7 +169,42 @@
     renderList();
   });
 
+  async function copyText(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+    }
+    flash(`Copied ${text}`);
+  }
+
+  let flashTimer = null;
+  function flash(message) {
+    let el = document.querySelector(".admin-flash");
+    if (!el) {
+      el = document.createElement("div");
+      el.className = "toast admin-flash";
+      document.body.appendChild(el);
+    }
+    el.textContent = message;
+    el.classList.add("is-visible");
+    clearTimeout(flashTimer);
+    flashTimer = setTimeout(() => el.classList.remove("is-visible"), 1800);
+  }
+
   $("#orderList").addEventListener("click", (e) => {
+    const copy = e.target.closest("[data-copy]");
+    if (copy) {
+      copyText(copy.dataset.copy);
+      return;
+    }
     const toggle = e.target.closest("[data-toggle]");
     if (toggle) {
       const code = toggle.dataset.toggle;
