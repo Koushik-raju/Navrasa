@@ -52,7 +52,7 @@
 
       <div class="storage-warn" id="storageWarn" hidden>
         <b>Orders can't be saved yet.</b> This site is running on Vercel without a database. In your Vercel project open
-        <b>Storage → Create / Connect → Upstash (Redis)</b>, connect it to this project, then redeploy. Customers can browse, but checkout will show an error until then.
+        <b>Storage → Create → Blob</b> (choose <b>Private</b>), connect it to this project, then redeploy. Orders are then saved as files (<code>orders.json</code> + <code>orders.md</code>). Customers can browse, but checkout will show an error until then.
       </div>
       <!-- DASHBOARD -->
       <section data-panel="dashboard">

@@ -61,12 +61,25 @@ Back up the `data/` folder regularly. You can also download orders as **CSV** (o
 
 ## Deploy on Vercel
 
-1. Import the GitHub repo in Vercel (framework preset: **Other**, no build command). `vercel.json` already serves `public/` as the site and `api/index.js` as the API.
-2. **Settings → Environment Variables:** add `ADMIN_PASSWORD` (and optionally `SESSION_SECRET`, any long random string).
-3. **Storage → Create Database → Upstash (Redis)** (free tier is fine) → connect it to this project. Vercel adds `KV_REST_API_URL` / `KV_REST_API_TOKEN` automatically; the app detects them.
-4. **Redeploy** (Deployments → ⋯ → Redeploy) so the new variables are picked up.
+Orders are stored as **files** in a private Vercel Blob store (Vercel's own disk is read-only):
 
-On Vercel, orders, the menu and uploaded photos are stored in Redis (Vercel's own disk is read-only). Download them any time from the admin panel as **CSV** or **orders.md**. Without the database the shop still loads, but checkout shows a "storage not set up" message and the admin panel shows a yellow warning.
+| File in Blob store | What it is |
+|---|---|
+| `navrasa/orders.json` | The order database — every order, read and updated on each change |
+| `navrasa/orders.md` | Human-readable log of all orders, rewritten after every change |
+| `navrasa/menu.json` | Menu and prices (edited from the admin panel) |
+| `navrasa/images/…` | Bowl photos uploaded in the admin panel |
+
+Writes are conditional on the file's version (ETag), so simultaneous orders never overwrite each other.
+You can browse and download these files in Vercel → **Storage → your Blob store → Browser**, or from the admin panel (**⬇ orders.md**, **⬇ Orders CSV**).
+
+Setup:
+1. Import the GitHub repo in Vercel (framework preset **Other**). `vercel.json` serves `public/` and routes `/api/*` to `api/index.js`.
+2. **Settings → Environment Variables:** add `ADMIN_PASSWORD`.
+3. **Storage → Create → Blob**, access **Private**, connect it to this project (this adds `BLOB_READ_WRITE_TOKEN`).
+4. **Redeploy.**
+
+(Upstash Redis is still supported as an alternative: if `KV_REST_API_URL`/`KV_REST_API_TOKEN` are set and no Blob token is, Redis is used.)
 
 ## Deploy elsewhere (Render, Railway, VPS)
 
