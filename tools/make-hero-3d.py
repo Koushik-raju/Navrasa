@@ -40,7 +40,10 @@ clear = (yy > 835) & inside_body & ~label & (mx - mn < 26) & (mn > 125)
 alpha2 = np.where(clear, np.clip((250 - rgb.mean(2)) / 110, 0, 0.6) * alpha, alpha2)
 shadow = shadow | clear
 rgb2 = np.where(shadow[..., None], np.array([60, 45, 30], np.float32), rgb)
-Image.fromarray(np.dstack([rgb2, alpha2 * 255]).astype(np.uint8), 'RGBA').save('../public/img/hero-cup.webp', quality=92, method=6)
+_hero = Image.fromarray(np.dstack([rgb2, alpha2 * 255]).astype(np.uint8), 'RGBA')
+# gentle sharpening (colour only, not the transparency) so fruit detail stays crisp when the photo is shown in 3D
+_rgb = _hero.convert('RGB').filter(ImageFilter.UnsharpMask(radius=1.4, percent=70, threshold=2)); _rgb.putalpha(_hero.getchannel('A'))
+_rgb.save('../public/img/hero-cup.webp', quality=95, method=6)
 Rr = 555.0; dx = xx - cx
 body = np.sqrt(np.clip(Rbody(yy) ** 2 - dx ** 2, 0, None)) / Rr
 heapF = 0.35 + 0.65 * np.clip((yy - 40) / (360 - 40), 0, 1) ** 1.2

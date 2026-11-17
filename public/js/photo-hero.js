@@ -6,7 +6,7 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export function initPhotoHero(canvas, { image = '/img/hero-cup.webp', depth = '/img/hero-depth.png', aspect = 1.5, depthScale = 0.72 } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 3)); // full sharpness on retina phones/laptops
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.NoToneMapping;
 
@@ -15,12 +15,12 @@ export function initPhotoHero(canvas, { image = '/img/hero-cup.webp', depth = '/
 
   const loader = new THREE.TextureLoader();
   const photo = loader.load(image, () => { ready = true; });
-  photo.colorSpace = THREE.SRGBColorSpace; photo.anisotropy = 8;
+  photo.colorSpace = THREE.SRGBColorSpace; photo.anisotropy = renderer.capabilities.getMaxAnisotropy();
   const depthTex = loader.load(depth);
   let ready = false;
 
   const W = 3, H = W / aspect;
-  const geo = new THREE.PlaneGeometry(W, H, 360, 240);
+  const geo = new THREE.PlaneGeometry(W, H, 512, 342);
   // unlit: black base colour + photo as emissive keeps the photo's exact colours; map supplies alpha
   const mat = new THREE.MeshStandardMaterial({
     color: 0x000000, map: photo, emissive: 0xffffff, emissiveMap: photo, roughness: 1, metalness: 0,

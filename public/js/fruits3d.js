@@ -55,7 +55,11 @@ function heightToNormal(H, w, h, strength, wrap) {
   const t = new THREE.CanvasTexture(c); if (wrap) t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
 }
 // fn(u, v, out) → out[0..2] = sRGB colour 0-255, out[3] = height. v = 0 at the bottom of the texture (matches UVs).
+// Texture quality: 2x resolution on laptops/desktops, 1x on phones and low-power devices (keeps load fast)
+const LOW_POWER = (navigator.hardwareConcurrency || 8) <= 4 || Math.min(screen.width, screen.height) < 600;
+export const TEXQ = LOW_POWER ? 1 : 2;
 function paint(w, h, fn, { normal = 0, wrap = false, post } = {}) {
+  w *= TEXQ; h *= TEXQ; normal *= TEXQ; // same look, more pixels (normal strength scales with pixel density)
   const c = document.createElement('canvas'); c.width = w; c.height = h;
   const g = c.getContext('2d'), img = g.createImageData(w, h), d = img.data;
   const H = normal ? new Float32Array(w * h) : null, o = [0, 0, 0, 0];
@@ -67,7 +71,7 @@ function paint(w, h, fn, { normal = 0, wrap = false, post } = {}) {
   }
   g.putImageData(img, 0, 0);
   if (post) post(g, w, h, H);
-  const map = new THREE.CanvasTexture(c); map.colorSpace = THREE.SRGBColorSpace; map.anisotropy = 8;
+  const map = new THREE.CanvasTexture(c); map.colorSpace = THREE.SRGBColorSpace; map.anisotropy = 16;
   if (wrap) map.wrapS = map.wrapT = THREE.RepeatWrapping;
   return { map, normalMap: H ? heightToNormal(H, w, h, normal, wrap) : null };
 }
@@ -181,11 +185,11 @@ const TX = {
         for (const [sx, sy, a] of seeds) {
           const px = (sx * 0.5 + 0.5) * w, py = (1 - (sy * 0.5 + 0.5)) * h;
           g.save(); g.translate(px, py); g.rotate(-a); g.fillStyle = '#1a1308';
-          g.beginPath(); g.ellipse(0, 0, rand(5, 7), rand(2.2, 3), 0, 0, TAU); g.fill();
-          g.fillStyle = 'rgba(255,255,255,0.35)'; g.beginPath(); g.ellipse(-1, -0.8, 1.6, 0.7, 0, 0, TAU); g.fill();
+          g.beginPath(); g.ellipse(0, 0, rand(5, 7) * TEXQ, rand(2.2, 3) * TEXQ, 0, 0, TAU); g.fill();
+          g.fillStyle = 'rgba(255,255,255,0.35)'; g.beginPath(); g.ellipse(-1 * TEXQ, -0.8 * TEXQ, 1.6 * TEXQ, 0.7 * TEXQ, 0, 0, TAU); g.fill();
           g.restore();
           const cx = Math.round(px), cy = Math.round(py);
-          for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++) { const i = (cy + dy) * w + cx + dx; if (H[i] !== undefined) H[i] += Math.max(0, 1 - Math.hypot(dx, dy) / 4.5) * 0.8; }
+          const R = 4 * TEXQ; for (let dy = -R; dy <= R; dy++) for (let dx = -R; dx <= R; dx++) { const i = (cy + dy) * w + cx + dx; if (H[i] !== undefined) H[i] += Math.max(0, 1 - Math.hypot(dx, dy) / (4.5 * TEXQ)) * 0.8; }
         }
       },
     });
@@ -206,7 +210,7 @@ const TX = {
     }, {
       normal: 4, post: (g, W, Hh, H) => {
         for (const s of seeds) for (const du of [-1, 0, 1]) {
-          const px = (s.u + du) * W, py = (1 - s.v) * Hh, rx = Math.min(9, 0.32 * W / s.n), ry = 7;
+          const px = (s.u + du) * W, py = (1 - s.v) * Hh, rx = Math.min(9 * TEXQ, 0.32 * W / s.n), ry = 7 * TEXQ;
           if (px < -rx || px > W + rx) continue;
           const gr = g.createRadialGradient(px, py, 0, px, py, rx);
           gr.addColorStop(0, 'rgba(90,0,6,0.55)'); gr.addColorStop(0.6, 'rgba(120,0,10,0.25)'); gr.addColorStop(1, 'rgba(120,0,10,0)');
@@ -754,7 +758,7 @@ const MATC = {
   granolaCore: () => once('m.granCore', () => phys({ color: '#9d6a33', roughness: 0.9 })),
   yogurtCup: () => once('m.yogCup', () => phys({ color: '#fbf7ef', roughness: 0.42, clearcoat: 0.5, clearcoatRoughness: 0.3, sheen: 0.6, sheenColor: new THREE.Color('#ffffff') })),
   mint: () => once('m.mint', () => { const t = TXC.mint(); return phys({ map: t.map, normalMap: t.normalMap, normalScale: nScale(0.35), roughness: 0.45, sheen: 0.7, sheenColor: new THREE.Color('#c9f0a8'), clearcoat: 0.3, side: THREE.DoubleSide }); }),
-  chia: () => once('m.chia', () => phys({ color: '#ffffff', roughness: 0.35, clearcoat: 0.6 })),
+  chia: () => once('m.chia', () => phys({ color: '#ffffff', roughness: 0.55, clearcoat: 0.25, clearcoatRoughness: 0.4, envMapIntensity: 0.5 })),
   nut: () => once('m.nut', () => phys({ color: '#ead2a0', roughness: 0.55, clearcoat: 0.2 })),
   pepita: () => once('m.pepita', () => phys({ color: '#5f7f2e', roughness: 0.45, clearcoat: 0.3 })),
   coconut: () => once('m.coco', () => phys({ color: '#fbf8f1', roughness: 0.7, side: THREE.DoubleSide })),
@@ -942,8 +946,8 @@ export function makeToppings(pieces, toppings = [], { vessel = 'cup', garnish = 
   if (has('granola')) root.add(granolaInstances(scatter(34).map(h => ({ p: h.p.addScaledVector(h.n, 0.03), s: rand(0.06, 0.09) }))));
   if (has('chia')) {
     const c = new THREE.Color();
-    root.add(instanced(once('g.chia', () => new THREE.SphereGeometry(1, 6, 4)), MATC.chia(), scatter(380), () => { const s = rand(0.009, 0.013); return [s, s * 0.55, s * 0.75]; }, 0.3,
-      () => c.setHSL(0.08, 0.1, rand(0.04, 0.22)).clone()));
+    root.add(instanced(once('g.chia', () => new THREE.SphereGeometry(1, 12, 8)), MATC.chia(), scatter(380), () => { const s = rand(0.009, 0.013); return [s, s * 0.55, s * 0.75]; }, 0.3,
+      () => c.setHSL(0.07, rand(0.05, 0.15), rand(0.02, 0.09)).clone()));
   }
   if (has('nuts')) {
     const hits = scatter(16);
@@ -982,8 +986,7 @@ export function makeToppings(pieces, toppings = [], { vessel = 'cup', garnish = 
 // =====================================================================
 export function createStage(canvas, { fov = 32, camPos = [0, 3, 6], target = [0, 0.55, 0], shadow = true, size } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance', preserveDrawingBuffer: !!size });
-  const lowPower = (navigator.hardwareConcurrency || 8) <= 4 || Math.min(screen.width, screen.height) < 600;
-  renderer.setPixelRatio(size ? 1 : Math.min(window.devicePixelRatio, lowPower ? 1.25 : 1.75));
+  renderer.setPixelRatio(size ? 1 : Math.min(window.devicePixelRatio, LOW_POWER ? 1.5 : 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 0.92;

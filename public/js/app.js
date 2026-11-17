@@ -287,9 +287,15 @@ async function init3D() {
   try {
     const { initPhotoHero } = await import('./photo-hero.js');
     initPhotoHero($('#heroCanvas'));
-    const { initBuilder } = await import('./scenes.js');
-    builderScene = initBuilder($('#builderCanvas'));
-    builderScene.setBowl(builder.fruits, builder.toppings);
+    // the 3D bowl builder is heavier — only build it when the customer scrolls near it
+    const startBuilder = async () => {
+      if (builderScene) return;
+      const { initBuilder } = await import('./scenes.js');
+      builderScene = initBuilder($('#builderCanvas'));
+      builderScene.setBowl(builder.fruits, builder.toppings);
+    };
+    const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); startBuilder().catch(e => console.error('3D builder failed:', e)); } }, { rootMargin: '600px' });
+    io.observe($('#builderCanvas'));
     // menu cards use real photos (uploaded per bowl in admin, else the Navrasa product photo)
   } catch (e) {
     console.error('3D failed to start:', e);
