@@ -172,7 +172,31 @@
       <td>${controls
         ? `<select class="st-select st ${o.status}" data-status-for="${o.id}" aria-label="Change status of ${o.id}">${STATUSES.map(s => `<option value="${s}" ${s === o.status ? 'selected' : ''}>${label(s)}</option>`).join('')}</select>`
         : `<span class="st ${o.status}">${label(o.status)}</span>`}</td>
-      ${controls ? `<td class="r acts"><button class="icon-act" data-edit="${o.id}" title="Edit order">✏️</button><button class="icon-act del" data-del-order="${o.id}" title="Delete order">🗑</button></td>` : ''}</tr>`;
+      ${controls ? `<td class="r acts">${stepButtons(o)}<button class="icon-act" data-edit="${o.id}" title="Edit order">✏️</button><button class="icon-act del" data-del-order="${o.id}" title="Delete order">🗑</button></td>` : ''}</tr>`;
+  }
+  // quick status controls: ◀ back to the previous status, Next ▶ to the next step in the flow
+  const FLOW = ['pending', 'preparing', 'out-for-delivery', 'delivered'];
+  function prevStatus(o) {
+    if (o.status === 'cancelled') { // undo a cancel: back to what it was before
+      for (let i = o.history.length - 1; i >= 0; i--) if (o.history[i].status !== 'cancelled') return o.history[i].status;
+      return 'pending';
+    }
+    const k = FLOW.indexOf(o.status); return k > 0 ? FLOW[k - 1] : null;
+  }
+  function nextStatus(o) { const k = FLOW.indexOf(o.status); return k >= 0 && k < FLOW.length - 1 ? FLOW[k + 1] : null; }
+  function stepButtons(o) {
+    const p = prevStatus(o), n = nextStatus(o);
+    return `<span class="steps">
+      <button class="step-btn" data-step="${o.id}" data-to="${p || ''}" ${p ? '' : 'disabled'} title="${p ? 'Back to ' + label(p) : 'No previous status'}">◀</button>
+      <button class="step-btn next" data-step="${o.id}" data-to="${n || ''}" ${n ? '' : 'disabled'} title="${n ? 'Move to ' + label(n) : 'Already ' + label(o.status)}">${n ? label(n) + ' ▶' : '✓ ' + label(o.status)}</button>
+    </span>`;
+  }
+  async function setStatus(id, status, btn) {
+    if (!status) return;
+    if (status === 'cancelled' && !confirm(`Cancel order ${id}?`)) return;
+    if (btn) btn.disabled = true;
+    try { await api('/api/admin/orders/' + id, { method: 'PATCH', body: JSON.stringify({ status }) }); toast(`${id} → ${label(status)}`); await refresh(); }
+    catch (ex) { toast('Not saved: ' + ex.message); if (btn) btn.disabled = false; }
   }
   function filtered() {
     const today = localISO(new Date()), tm = new Date(); tm.setDate(tm.getDate() + 1); const tomorrow = localISO(tm);
@@ -208,7 +232,7 @@
       if (status === 'cancelled' && !confirm(`Cancel order ${id}?`)) { sel.value = o.status; return; }
       sel.disabled = true;
       try { await api('/api/admin/orders/' + id, { method: 'PATCH', body: JSON.stringify({ status }) }); toast(`${id} → ${label(status)}`); await refresh(); }
-      catch (ex) { toast(ex.message); sel.value = o.status; } finally { sel.disabled = false; }
+      catch (ex) { toast('Not saved: ' + ex.message); sel.value = o.status; } finally { sel.disabled = false; }
       return;
     }
     if (e.target.id === 'selAll') { filtered().forEach(o => (e.target.checked ? selected.add(o.id) : selected.delete(o.id))); renderOrders(); return; }
@@ -230,6 +254,7 @@
   $('#search').addEventListener('input', e => { filter.q = e.target.value; renderOrders(); });
   $('#dateFilter').addEventListener('change', e => { filter.date = e.target.value; renderOrders(); });
   document.addEventListener('click', e => {
+    const st = e.target.closest('[data-step]'); if (st) { setStatus(st.dataset.step, st.dataset.to, st); return; }
     const ed = e.target.closest('[data-edit]'); if (ed) { const o = orders.find(x => x.id === ed.dataset.edit); if (o) openEditor(o); return; }
     const dl = e.target.closest('[data-del-order]'); if (dl) { deleteOne(dl.dataset.delOrder); return; }
     if (e.target.closest('.chk') || e.target.closest('.st-select')) return;

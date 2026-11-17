@@ -219,3 +219,12 @@ input:focus, select:focus, textarea:focus { outline: 2px solid rgba(255, 90, 60,
 .st-select option { color: var(--ink); background: #fff; }
 .st-select.pending { background-color: #fff6dc; } .st-select.preparing { background-color: #e6f0fd; } .st-select.out-for-delivery { background-color: #f2eafc; }
 .st-select.delivered { background-color: #e5f5ea; } .st-select.cancelled { background-color: #fbe8e8; }
+
+.steps { display: inline-flex; gap: 4px; margin-right: 6px; vertical-align: middle; }
+.step-btn { border: 1px solid var(--line); background: #fff; border-radius: 8px; height: 30px; padding: 0 .6em; font: 600 .78rem var(--body); cursor: pointer; color: var(--ink); white-space: nowrap; }
+.step-btn:hover:not(:disabled) { border-color: var(--ink2); background: #f8f5ee; }
+.step-btn.next { background: var(--green); color: #fff; border-color: var(--green); min-width: 118px; }
+.step-btn.next:hover:not(:disabled) { background: var(--green2); }
+.step-btn:disabled { opacity: .45; cursor: default; }
+.step-btn.next:disabled { background: #e5f5ea; color: var(--s-delivered); border-color: #cfe9d7; opacity: 1; }
+.step-btn { text-transform: capitalize; }
