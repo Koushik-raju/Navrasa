@@ -169,7 +169,9 @@
       <td>${dLabel(o.delivery.date)}<small>${o.delivery.slot}</small></td>
       <td>${n} item${n > 1 ? 's' : ''}<small>${esc(o.items.map(i => i.name).join(', ').slice(0, 40))}</small></td>
       <td class="r"><b>${fmt(o.total)}</b><small>${esc(o.payment.replace(/-/g, ' '))}</small></td>
-      <td><span class="st ${o.status}">${label(o.status)}</span></td>
+      <td>${controls
+        ? `<select class="st-select st ${o.status}" data-status-for="${o.id}" aria-label="Change status of ${o.id}">${STATUSES.map(s => `<option value="${s}" ${s === o.status ? 'selected' : ''}>${label(s)}</option>`).join('')}</select>`
+        : `<span class="st ${o.status}">${label(o.status)}</span>`}</td>
       ${controls ? `<td class="r acts"><button class="icon-act" data-edit="${o.id}" title="Edit order">✏️</button><button class="icon-act del" data-del-order="${o.id}" title="Delete order">🗑</button></td>` : ''}</tr>`;
   }
   function filtered() {
@@ -199,7 +201,16 @@
     $('#selAll').checked = list.length > 0 && list.every(o => selected.has(o.id));
     $('#bulkDelete').hidden = !selected.size; $('#bulkDelete').textContent = `🗑 Delete selected (${selected.size})`;
   }
-  $('#ordersTable').addEventListener('change', e => {
+  $('#ordersTable').addEventListener('change', async e => {
+    const sel = e.target.closest('[data-status-for]');
+    if (sel) {
+      const id = sel.dataset.statusFor, status = sel.value, o = orders.find(x => x.id === id);
+      if (status === 'cancelled' && !confirm(`Cancel order ${id}?`)) { sel.value = o.status; return; }
+      sel.disabled = true;
+      try { await api('/api/admin/orders/' + id, { method: 'PATCH', body: JSON.stringify({ status }) }); toast(`${id} → ${label(status)}`); await refresh(); }
+      catch (ex) { toast(ex.message); sel.value = o.status; } finally { sel.disabled = false; }
+      return;
+    }
     if (e.target.id === 'selAll') { filtered().forEach(o => (e.target.checked ? selected.add(o.id) : selected.delete(o.id))); renderOrders(); return; }
     const id = e.target.dataset.sel; if (!id) return;
     e.target.checked ? selected.add(id) : selected.delete(id); renderOrders();
@@ -221,7 +232,7 @@
   document.addEventListener('click', e => {
     const ed = e.target.closest('[data-edit]'); if (ed) { const o = orders.find(x => x.id === ed.dataset.edit); if (o) openEditor(o); return; }
     const dl = e.target.closest('[data-del-order]'); if (dl) { deleteOne(dl.dataset.delOrder); return; }
-    if (e.target.closest('.chk')) return;
+    if (e.target.closest('.chk') || e.target.closest('.st-select')) return;
     const tr = e.target.closest('tr[data-id]'); if (!tr) return;
     const o = orders.find(x => x.id === tr.dataset.id); if (o) openDetail(o);
   });

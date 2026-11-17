@@ -210,3 +210,12 @@ input:focus, select:focus, textarea:focus { outline: 2px solid rgba(255, 90, 60,
 .toolbar .tabs { flex: 1 1 100%; }
 .toolbar .filters { flex: 1 1 100%; justify-content: flex-start; flex-wrap: wrap; }
 .toolbar .filters input[type=search] { flex: 1 1 220px; max-width: none; min-width: 180px; }
+
+.tbl .st-select { border: 1.5px solid currentColor; cursor: pointer; padding: .3em 1.6em .3em .7em; width: auto; font: 700 .78rem var(--body); border-radius: 999px; appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 11px) 52%, calc(100% - 7px) 52%; background-size: 4px 4px; background-repeat: no-repeat; }
+.st-select.st::before { display: none; }
+.st-select:focus { outline: 2px solid rgba(0,0,0,.15); }
+.st-select option { color: var(--ink); background: #fff; }
+.st-select.pending { background-color: #fff6dc; } .st-select.preparing { background-color: #e6f0fd; } .st-select.out-for-delivery { background-color: #f2eafc; }
+.st-select.delivered { background-color: #e5f5ea; } .st-select.cancelled { background-color: #fbe8e8; }
