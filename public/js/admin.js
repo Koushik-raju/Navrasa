@@ -154,20 +154,23 @@
     hbars($('#topProducts'), stats.topProducts.map(p => ({ k: p.name, v: p.qty, label: p.qty + ' sold' })), 'var(--coral)');
     hbars($('#fruitBars'), stats.fruits.slice(0, 8).map(f => ({ k: f.name, v: f.qty })), 'var(--mango)');
     hbars($('#slotBars'), Object.entries(stats.slots).map(([k, v]) => ({ k, v })));
-    $('#recent').innerHTML = stats.recent.length ? `<div class="table-wrap"><table class="tbl"><tbody>${stats.recent.map(rowHtml).join('')}</tbody></table></div>` : '<p class="nodata">No orders yet — they will show up here the moment a customer checks out.</p>';
+    $('#recent').innerHTML = stats.recent.length ? `<div class="table-wrap"><table class="tbl"><tbody>${stats.recent.map(o => rowHtml(o)).join('')}</tbody></table></div>` : '<p class="nodata">No orders yet — they will show up here the moment a customer checks out.</p>';
   }
 
   // ---------- orders ----------
-  function rowHtml(o) {
+  const selected = new Set();
+  function rowHtml(o, controls = false) {
     const n = o.items.reduce((s, i) => s + i.qty, 0);
-    return `<tr data-id="${o.id}" class="${freshIds.has(o.id) ? 'new' : ''}">
+    return `<tr data-id="${o.id}" class="${freshIds.has(o.id) ? 'new' : ''} ${selected.has(o.id) ? 'sel' : ''}">
+      ${controls ? `<td class="chk"><input type="checkbox" data-sel="${o.id}" ${selected.has(o.id) ? 'checked' : ''} aria-label="Select ${o.id}" /></td>` : ''}
       <td class="mono">${o.id}</td>
       <td>${dt(o.createdAt)}</td>
       <td>${esc(o.customer.name)}<small>${esc(o.customer.phone)}</small></td>
       <td>${dLabel(o.delivery.date)}<small>${o.delivery.slot}</small></td>
       <td>${n} item${n > 1 ? 's' : ''}<small>${esc(o.items.map(i => i.name).join(', ').slice(0, 40))}</small></td>
       <td class="r"><b>${fmt(o.total)}</b><small>${esc(o.payment.replace(/-/g, ' '))}</small></td>
-      <td><span class="st ${o.status}">${label(o.status)}</span></td></tr>`;
+      <td><span class="st ${o.status}">${label(o.status)}</span></td>
+      ${controls ? `<td class="r acts"><button class="icon-act" data-edit="${o.id}" title="Edit order">✏️</button><button class="icon-act del" data-del-order="${o.id}" title="Delete order">🗑</button></td>` : ''}</tr>`;
   }
   function filtered() {
     const today = localISO(new Date()), tm = new Date(); tm.setDate(tm.getDate() + 1); const tomorrow = localISO(tm);
@@ -189,13 +192,36 @@
     STATUSES.forEach(s => (counts[s] = orders.filter(o => o.status === s).length));
     $('#statusTabs').innerHTML = ['all', 'open', ...STATUSES].map(s => `<button data-s="${s}" class="${filter.status === s ? 'on' : ''}">${label(s)}<b>${counts[s]}</b></button>`).join('');
     const list = filtered();
-    $('#ordersTable tbody').innerHTML = list.map(rowHtml).join('');
+    // forget selections for orders that no longer exist
+    [...selected].forEach(id => { if (!orders.some(o => o.id === id)) selected.delete(id); });
+    $('#ordersTable tbody').innerHTML = list.map(o => rowHtml(o, true)).join('');
     $('#ordersEmpty').hidden = !!list.length;
+    $('#selAll').checked = list.length > 0 && list.every(o => selected.has(o.id));
+    $('#bulkDelete').hidden = !selected.size; $('#bulkDelete').textContent = `🗑 Delete selected (${selected.size})`;
   }
+  $('#ordersTable').addEventListener('change', e => {
+    if (e.target.id === 'selAll') { filtered().forEach(o => (e.target.checked ? selected.add(o.id) : selected.delete(o.id))); renderOrders(); return; }
+    const id = e.target.dataset.sel; if (!id) return;
+    e.target.checked ? selected.add(id) : selected.delete(id); renderOrders();
+  });
+  $('#bulkDelete').onclick = async () => {
+    const ids = [...selected];
+    if (!ids.length || !confirm(`Permanently delete ${ids.length} order${ids.length > 1 ? 's' : ''}? This removes ${ids.length > 1 ? 'them' : 'it'} from the orders file and cannot be undone.`)) return;
+    try { await api('/api/admin/orders/delete', { method: 'POST', body: JSON.stringify({ ids }) }); selected.clear(); toast(`Deleted ${ids.length} order${ids.length > 1 ? 's' : ''}`); refresh(); }
+    catch (e) { toast(e.message); }
+  };
+  async function deleteOne(id) {
+    if (!confirm(`Permanently delete order ${id}? This removes it from the orders file and cannot be undone. (Tip: mark it "cancelled" to keep a record.)`)) return false;
+    try { await api('/api/admin/orders/' + id, { method: 'DELETE' }); selected.delete(id); toast('Order deleted'); refresh(); return true; } catch (e) { toast(e.message); return false; }
+  }
+  $('#newOrder').onclick = () => openEditor(null);
   $('#statusTabs').addEventListener('click', e => { const b = e.target.closest('[data-s]'); if (b) { filter.status = b.dataset.s; renderOrders(); } });
   $('#search').addEventListener('input', e => { filter.q = e.target.value; renderOrders(); });
   $('#dateFilter').addEventListener('change', e => { filter.date = e.target.value; renderOrders(); });
   document.addEventListener('click', e => {
+    const ed = e.target.closest('[data-edit]'); if (ed) { const o = orders.find(x => x.id === ed.dataset.edit); if (o) openEditor(o); return; }
+    const dl = e.target.closest('[data-del-order]'); if (dl) { deleteOne(dl.dataset.delOrder); return; }
+    if (e.target.closest('.chk')) return;
     const tr = e.target.closest('tr[data-id]'); if (!tr) return;
     const o = orders.find(x => x.id === tr.dataset.id); if (o) openDetail(o);
   });
@@ -241,17 +267,124 @@
           <button class="btn sm" id="saveNote" style="margin-top:6px">Save note</button>
         </div>
         <div class="d-sec"><h4>History</h4><ul class="hist">${o.history.map(h => `<li><span class="st ${h.status}">${label(h.status)}</span><span class="muted">${dt(h.at)}</span></li>`).join('')}</ul></div>
-        <div class="d-actions"><button class="btn sm" id="dPrint">🖨 Print slip</button><button class="btn sm danger" id="dDelete">Delete order</button></div>
+        <div class="d-actions"><button class="btn sm primary" id="dEdit">✏️ Edit order</button><button class="btn sm" id="dPrint">🖨 Print slip</button><button class="btn sm danger" id="dDelete">🗑 Delete order</button></div>
       </div>`;
     $('#dClose').onclick = closeDetail;
     $$('[data-status]', $('#detail')).forEach(b => (b.onclick = () => patch(o.id, { status: b.dataset.status }, `Marked ${label(b.dataset.status)}`)));
     $('#saveNote').onclick = () => patch(o.id, { adminNote: $('#adminNote').value }, 'Note saved', true);
     $('#dPrint').onclick = () => window.print();
-    $('#dDelete').onclick = async () => {
-      if (!confirm(`Permanently delete order ${o.id}? This cannot be undone. (Tip: use "cancelled" to keep a record.)`)) return;
-      try { await api('/api/admin/orders/' + o.id, { method: 'DELETE' }); toast('Order deleted'); closeDetail(); refresh(); } catch (e) { toast(e.message); }
+    $('#dDelete').onclick = async () => { if (await deleteOne(o.id)) closeDetail(); };
+    $('#dEdit').onclick = () => openEditor(o);
+  }
+
+  // ---------- order editor (create + update) ----------
+  const SLOTS = ['08:00-10:00', '10:00-12:00', '12:00-14:00', '14:00-16:00', '16:00-18:00', '18:00-20:00'];
+  const PAYMENTS = [['cash', 'Cash'], ['upi-on-delivery', 'UPI'], ['card-on-delivery', 'Card']];
+  let edMenu = null, edItems = [], editingId = null;
+  function unitPrice(it) {
+    if (it.type === 'custom') {
+      const f = it.fruits.reduce((s, id) => s + (edMenu.custom.fruits.find(x => x.id === id)?.price || 0), 0);
+      const t = it.toppings.reduce((s, id) => s + (edMenu.custom.toppings.find(x => x.id === id)?.price || 0), 0);
+      return edMenu.custom.basePrice + f + t;
+    }
+    return edMenu.bowls.find(b => b.id === it.id)?.price || 0;
+  }
+  async function openEditor(o) {
+    try { edMenu = await api('/api/admin/menu'); } catch (e) { return toast(e.message); }
+    editingId = o ? o.id : null;
+    edItems = o ? o.items.map(i => ({ type: i.type, id: i.id, qty: i.qty, fruits: [...(i.fruits || [])], toppings: [...(i.toppings || [])] }))
+                : [{ type: 'bowl', id: edMenu.bowls[0]?.id, qty: 1, fruits: [], toppings: [] }];
+    const c = o?.customer || {}, d = o?.delivery || { date: localISO(new Date()), slot: SLOTS[2] };
+    openId = null;
+    $('#detail').innerHTML = `
+      <div class="d-head"><div><h2>${o ? 'Edit ' + o.id : 'New order'}</h2><span class="muted">${o ? 'Changes are saved to the orders file' : 'Add a phone or walk-in order'}</span></div><button class="btn sm" id="edClose" aria-label="Close">✕</button></div>
+      <form class="d-body ed" id="edForm" novalidate>
+        <div class="d-sec"><h4>Customer</h4>
+          <div class="ed-grid">
+            <label>Name*<input name="name" required maxlength="80" value="${esc(c.name || '')}" /></label>
+            <label>Phone*<input name="phone" required maxlength="20" value="${esc(c.phone || '')}" /></label>
+            <label class="span2">Email<input name="email" type="email" maxlength="120" value="${esc(c.email || '')}" /></label>
+            <label class="span2">Address*<textarea name="address" rows="2" maxlength="300">${esc(c.address || '')}</textarea></label>
+          </div>
+        </div>
+        <div class="d-sec"><h4>Delivery & payment</h4>
+          <div class="ed-grid">
+            <label>Date*<input name="date" type="date" value="${esc(d.date)}" /></label>
+            <label>Slot*<select name="slot">${SLOTS.map(x => `<option ${x === d.slot ? 'selected' : ''}>${x}</option>`).join('')}</select></label>
+            <label>Payment<select name="payment">${PAYMENTS.map(([v, t]) => `<option value="${v}" ${o?.payment === v ? 'selected' : ''}>${t}</option>`).join('')}</select></label>
+            <label>Status<select name="status">${STATUSES.map(x => `<option value="${x}" ${(o?.status || 'pending') === x ? 'selected' : ''}>${label(x)}</option>`).join('')}</select></label>
+          </div>
+        </div>
+        <div class="d-sec"><h4>Items</h4><div id="edItems"></div>
+          <button type="button" class="btn sm" id="edAdd">＋ Add item</button>
+          <div class="ed-total" id="edTotal"></div>
+        </div>
+        <div class="d-sec"><h4>Notes</h4>
+          <div class="ed-grid">
+            <label class="span2">Customer notes<textarea name="notes" rows="2" maxlength="500">${esc(o?.notes || '')}</textarea></label>
+            <label class="span2">Internal note (staff only)<textarea name="adminNote" rows="2" maxlength="500">${esc(o?.adminNote || '')}</textarea></label>
+          </div>
+        </div>
+        <p class="err" id="edErr"></p>
+        <div class="d-actions"><button class="btn primary" type="submit" id="edSave">${o ? 'Save changes' : 'Create order'}</button><button class="btn" type="button" id="edCancel">Cancel</button>
+          ${o ? '<button class="btn danger" type="button" id="edDelete" style="margin-left:auto">🗑 Delete</button>' : ''}</div>
+      </form>`;
+    renderEdItems();
+    $('#detail').classList.add('open'); $('#detail').setAttribute('aria-hidden', 'false'); $('#scrim').hidden = false;
+    const close = () => { $('#detail').classList.remove('open'); $('#scrim').hidden = true; };
+    $('#edClose').onclick = close; $('#edCancel').onclick = close;
+    if (o) $('#edDelete').onclick = async () => { if (await deleteOne(o.id)) close(); };
+    $('#edAdd').onclick = () => { edItems.push({ type: 'bowl', id: edMenu.bowls[0]?.id, qty: 1, fruits: [], toppings: [] }); renderEdItems(); };
+    $('#edForm').onsubmit = async e => {
+      e.preventDefault();
+      const f = e.target, err = $('#edErr'); err.textContent = '';
+      if (!edItems.length) { err.textContent = 'Add at least one item.'; return; }
+      const body = {
+        customer: { name: f.name.value, phone: f.phone.value, email: f.email.value, address: f.address.value },
+        delivery: { date: f.date.value, slot: f.slot.value }, payment: f.payment.value, status: f.status.value,
+        notes: f.notes.value, adminNote: f.adminNote.value,
+        items: edItems.map(i => (i.type === 'custom' ? { type: 'custom', fruits: i.fruits, toppings: i.toppings, qty: i.qty } : { type: 'bowl', id: i.id, qty: i.qty })),
+      };
+      const btn = $('#edSave'); btn.disabled = true;
+      try {
+        const saved = await api(editingId ? '/api/admin/orders/' + editingId : '/api/admin/orders', { method: editingId ? 'PUT' : 'POST', body: JSON.stringify(body) });
+        toast(editingId ? `Order ${saved.id} updated` : `Order ${saved.id} created`); close(); await refresh();
+      } catch (ex) { err.textContent = ex.message; } finally { btn.disabled = false; }
     };
   }
+  function renderEdItems() {
+    const opts = it => edMenu.bowls.map(b => `<option value="${b.id}" ${it.type === 'bowl' && it.id === b.id ? 'selected' : ''}>${esc(b.name)} — ${fmt(b.price)}${b.available ? '' : ' (sold out)'}</option>`).join('') +
+      `<option value="__custom" ${it.type === 'custom' ? 'selected' : ''}>Custom bowl</option>`;
+    $('#edItems').innerHTML = edItems.map((it, i) => `
+      <div class="ed-item" data-i="${i}">
+        <div class="ed-row">
+          <select data-f="kind">${opts(it)}</select>
+          <input data-f="qty" type="number" min="1" max="20" value="${it.qty}" aria-label="Quantity" />
+          <b class="ed-line">${fmt(unitPrice(it) * it.qty)}</b>
+          <button type="button" class="icon-act del" data-f="rm" title="Remove item">✕</button>
+        </div>
+        ${it.type === 'custom' ? `<div class="ed-pick"><small>Fruits (2–8)</small>${edMenu.custom.fruits.map(f => `<label><input type="checkbox" data-fruit="${f.id}" ${it.fruits.includes(f.id) ? 'checked' : ''}/> ${esc(f.name)}</label>`).join('')}</div>
+          <div class="ed-pick"><small>Toppings</small>${edMenu.custom.toppings.map(t => `<label><input type="checkbox" data-top="${t.id}" ${it.toppings.includes(t.id) ? 'checked' : ''}/> ${esc(t.name)}</label>`).join('')}</div>` : ''}
+      </div>`).join('') || '<p class="nodata">No items.</p>';
+    const sub = edItems.reduce((s, it) => s + unitPrice(it) * it.qty, 0);
+    const fee = sub >= edMenu.freeDeliveryAbove ? 0 : edMenu.deliveryFee;
+    $('#edTotal').innerHTML = `<span>Subtotal ${fmt(sub)} · Delivery ${fee ? fmt(fee) : 'Free'}</span><b>Total ${fmt(sub + fee)}</b>`;
+  }
+  document.addEventListener('input', e => {
+    const row = e.target.closest('.ed-item'); if (!row) return;
+    const it = edItems[+row.dataset.i];
+    if (e.target.dataset.f === 'qty') { it.qty = Math.max(1, Math.min(20, parseInt(e.target.value, 10) || 1)); }
+    else if (e.target.dataset.f === 'kind') { if (e.target.value === '__custom') { it.type = 'custom'; it.id = 'custom'; } else { it.type = 'bowl'; it.id = e.target.value; } return renderEdItems(); }
+    else if (e.target.dataset.fruit) { const id = e.target.dataset.fruit; it.fruits = e.target.checked ? [...it.fruits, id] : it.fruits.filter(x => x !== id); }
+    else if (e.target.dataset.top) { const id = e.target.dataset.top; it.toppings = e.target.checked ? [...it.toppings, id] : it.toppings.filter(x => x !== id); }
+    const sub = edItems.reduce((s, x) => s + unitPrice(x) * x.qty, 0), fee = sub >= edMenu.freeDeliveryAbove ? 0 : edMenu.deliveryFee;
+    row.querySelector('.ed-line').textContent = fmt(unitPrice(it) * it.qty);
+    $('#edTotal').innerHTML = `<span>Subtotal ${fmt(sub)} · Delivery ${fee ? fmt(fee) : 'Free'}</span><b>Total ${fmt(sub + fee)}</b>`;
+  });
+  document.addEventListener('click', e => {
+    const rm = e.target.closest('.ed-item [data-f="rm"]'); if (!rm) return;
+    edItems.splice(+rm.closest('.ed-item').dataset.i, 1); renderEdItems();
+  });
   async function patch(id, body, msg, blurNote) {
     try {
       if (body.status === 'cancelled' && !confirm('Cancel this order?')) return;

@@ -90,6 +90,8 @@
         <div class="toolbar">
           <div class="tabs" id="statusTabs"></div>
           <div class="filters">
+            <button class="btn sm danger" id="bulkDelete" hidden>🗑 Delete selected</button>
+            <button class="btn sm primary" id="newOrder">＋ New order</button>
             <input type="search" id="search" placeholder="Search ID, name, phone, address…" />
             <select id="dateFilter">
               <option value="">All delivery dates</option>
@@ -102,7 +104,7 @@
         </div>
         <div class="card flush">
           <div class="table-wrap"><table class="tbl" id="ordersTable">
-            <thead><tr><th>Order</th><th>Placed</th><th>Customer</th><th>Delivery</th><th>Items</th><th class="r">Total</th><th>Status</th></tr></thead>
+            <thead><tr><th class="chk"><input type="checkbox" id="selAll" aria-label="Select all" /></th><th>Order</th><th>Placed</th><th>Customer</th><th>Delivery</th><th>Items</th><th class="r">Total</th><th>Status</th><th class="r">Actions</th></tr></thead>
             <tbody></tbody>
           </table></div>
           <p class="empty" id="ordersEmpty" hidden>No orders match.</p>
