@@ -233,3 +233,7 @@ legend { padding: 0; margin-bottom: .4rem; }
 /* Navrasa wordmark */
 .logo .leaf, .brand .leaf { width: 1.15em; height: auto; flex: none; }
 .wordmark { font-family: 'Pacifico', cursive; font-weight: 400; color: #2a6b2c; letter-spacing: 0; font-size: 1.05em; line-height: 1; }
+
+.bowl-photo.default { object-fit: contain; padding: 10px 8px 4px; }
+.bowl-card:hover .bowl-photo { transform: scale(1.04); }
+.bowl-photo { transition: transform .4s ease; }

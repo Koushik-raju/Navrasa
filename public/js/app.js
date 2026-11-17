@@ -121,7 +121,7 @@ function renderMenu() {
     <article class="bowl-card" data-id="${esc(b.id)}">
       <div class="bowl-art" style="background:linear-gradient(135deg, ${FRUIT_COLORS[b.fruits[0]] || '#ffd'}33, ${FRUIT_COLORS[b.fruits[1]] || '#fed'}55)">
         ${b.tag ? `<span class="tag">${esc(b.tag)}</span>` : ''}
-        ${(b.image || thumbs[thumbKey(b)]) ? `<img class="bowl-photo" src="${esc(b.image || thumbs[thumbKey(b)])}" alt="${esc(b.name)} fruit bowl" />` : `<div class="dish"></div>
+        ${true ? `<img class="bowl-photo${b.image ? '' : ' default'}" src="${esc(b.image || '/img/hero-cup.webp')}" alt="${esc(b.name)} fruit bowl" loading="lazy" decoding="async" />` : `<div class="dish"></div>
         <div style="position:absolute;left:50%;top:22%;width:150px;height:60px;transform:translateX(-50%)">${bowlArt(b)}</div>`}
         ${b.available ? '' : '<div class="soldout">SOLD OUT</div>'}
       </div>
@@ -287,17 +287,10 @@ async function init3D() {
   try {
     const { initPhotoHero } = await import('./photo-hero.js');
     initPhotoHero($('#heroCanvas'));
-    const { initBuilder, renderThumbnails } = await import('./scenes.js');
+    const { initBuilder } = await import('./scenes.js');
     builderScene = initBuilder($('#builderCanvas'));
     builderScene.setBowl(builder.fruits, builder.toppings);
-    // photoreal menu images, rendered once after the hero is up
-    setTimeout(async () => {
-      try {
-        const imgs = await renderThumbnails(MENU.bowls.filter(b => b.fruits.length && !b.image));
-        MENU.bowls.forEach(b => { if (imgs[b.id]) thumbs[thumbKey(b)] = imgs[b.id]; });
-        renderMenu();
-      } catch (e) { console.warn('Menu thumbnails skipped:', e); }
-    }, 600);
+    // menu cards use real photos (uploaded per bowl in admin, else the Navrasa product photo)
   } catch (e) {
     console.error('3D failed to start:', e);
     document.body.classList.add('no-webgl');
