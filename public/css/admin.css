@@ -234,3 +234,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid rgba(255, 90, 60,
 .bowl-row[hidden] { display: none !important; }
 .bowl-row .desc { grid-column: 2 / span 3; } .bowl-row .tagf { grid-column: span 2; }
 @media (max-width: 860px) { .bowl-row .desc, .bowl-row .tagf { grid-column: 1 / -1; } }
+
+.bowl-row .incf { grid-column: 2 / -1; } .bowl-row .incf small { font-weight: 400; }
+.bowl-row .incf textarea { font-size: .85rem; resize: vertical; }
+@media (max-width: 860px) { .bowl-row .incf { grid-column: 1 / -1; } }

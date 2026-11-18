@@ -468,6 +468,7 @@
         </div>
         <label class="desc">Description<input data-k="description" value="${esc(b.description)}" maxlength="300" /></label>
         <label class="tagf">Tag<input data-k="tag" value="${esc(b.tag)}" maxlength="20" placeholder="e.g. Popular" /></label>
+        <label class="incf">What's inside <small>(one per line — shown in the dropdown on the shop)</small><textarea data-k="includes" rows="3" placeholder="e.g. Banana&#10;Granola&#10;Chia seeds">${esc((b.includes || []).join('\n'))}</textarea></label>
       </div>`).join('') || '<p class="nodata">No items. Add one!</p>';
     $('#menuCat').innerHTML = `<option value="">All categories (${menu.bowls.length})</option>` + cats.map(c => `<option value="${esc(c.id)}">${esc(c.icon || '')} ${esc(c.name)} (${menu.bowls.filter(b => b.category === c.id).length})</option>`).join('');
     $('#menuCat').value = menuFilter.cat; filterMenuRows();
@@ -482,7 +483,7 @@
         const orig = menu.bowls[+row.dataset.i] || {};
         const v = k => $(`[data-k="${k}"]`, row);
         return { id: orig.id || v('name').value, name: v('name').value, category: v('category').value, portion: v('portion').value, price: v('price').value, tag: v('tag').value,
-          description: v('description').value, available: v('available').checked, image: row.dataset.image || '', fruits: orig.fruits || [] };
+          description: v('description').value, includes: v('includes').value.split('\n').map(t => t.trim()).filter(Boolean), available: v('available').checked, image: row.dataset.image || '', fruits: orig.fruits || [] };
       }),
       custom: {
         basePrice: $('#mBase').value,

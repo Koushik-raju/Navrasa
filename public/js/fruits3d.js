@@ -664,8 +664,8 @@ export function makeBowl({ contactShadow = true } = {}) {
 
 // Vessels: where the heaped top sits and how big pieces are relative to the container.
 export const VESSELS = {
-  bowl: { base: 0.6, rise: 0.3, R: 1.14, rLimit: 1.1, scale: 1, pack: 2.1 },
-  cup: { base: 1.3, rise: 0.46, R: 1.16, rLimit: 1.18, scale: 1.3, pack: 3.4, domeR: 0.9 },
+  bowl: { base: 0.6, rise: 0.3, R: 1.14, rLimit: 1.1, rimInner: 1.12, scale: 1, pack: 2.1, budget: 22, heap: 0.1 },
+  cup: { base: 1.3, rise: 0.42, R: 1.16, rLimit: 1.18, rimInner: 1.14, scale: 1.3, pack: 3.4, domeR: 1.13, budget: 20, heap: 0.1 },
 };
 export function surfaceY(r, v = VESSELS.bowl) { return v.base + v.rise * Math.sqrt(Math.max(0, 1 - (r / v.R) ** 2)); }
 
@@ -673,30 +673,37 @@ export function surfaceY(r, v = VESSELS.bowl) { return v.base + v.rise * Math.sq
 export function arrangeFruits(ids, vesselName = 'bowl') {
   const v = VESSELS[vesselName] || VESSELS.bowl, S = v.scale;
   const out = [], n = ids.length; if (!n) return out;
+  // A fixed budget of pieces for the whole bowl, shared between the chosen fruits,
+  // so picking more fruits never overfills it.
+  const budget = v.budget || 16, per = Math.max(2, Math.round(budget / n));
+  const RIM = v.rimInner || v.rLimit;              // nothing may reach past this radius
+  const TOP = v.base + v.rise + (v.heap ?? 0.12);  // nothing may sit higher than this
   const placed = [];
   const q1 = new THREE.Quaternion(), q2 = new THREE.Quaternion(), up = new V3(0, 1, 0), axis = new V3();
+  const box = new THREE.Box3(), size = new V3();
   ids.forEach((id, k) => {
-    const spec = PIECES[id]; if (!spec) return;
-    const pr = spec.r * S;
+    if (!PIECES[id]) return;
     const a0 = (k / n) * TAU, a1 = ((k + 1) / n) * TAU;
-    const rMax = v.rLimit - pr * 0.95;
-    const area = ((a1 - a0) / 2) * rMax * rMax;
-    const count = Math.max(2, Math.min(30, Math.round((area / (Math.PI * pr * pr)) * v.pack)));
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < per; i++) {
+      const obj = makePiece(id), g = new THREE.Group(); g.add(obj); g.scale.setScalar(S);
+      // measure this piece's real footprint
+      g.updateMatrixWorld(true); box.setFromObject(g); box.getSize(size);
+      const fr = Math.max(size.x, size.z) * 0.5 * 0.92;
+      const rMax = Math.max(0.02, RIM - fr);
       let best = null, bestD = -Infinity;
-      for (let c = 0; c < 18; c++) {
-        const a = n === 1 ? rand(0, TAU) : rand(a0 + 0.04, a1 - 0.04), r = Math.sqrt(rand(0.0, 1)) * rMax;
+      for (let c = 0; c < 24; c++) {
+        const a = n === 1 ? rand(0, TAU) : rand(a0 + 0.06, a1 - 0.06), r = Math.sqrt(rand(0.04, 1)) * rMax;
         const x = Math.cos(a) * r, z = Math.sin(a) * r;
-        let d = 9; for (const p of placed) d = Math.min(d, Math.hypot(p.x - x, p.z - z) - p.r - pr);
+        let d = 9; for (const p of placed) d = Math.min(d, Math.hypot(p.x - x, p.z - z) - p.r - fr * 0.8);
         if (d > bestD) { bestD = d; best = { x, z, a, r }; }
       }
-      placed.push({ x: best.x, z: best.z, r: pr });
-      const obj = makePiece(id), g = new THREE.Group(); g.add(obj); g.scale.setScalar(S);
-      const stack = bestD < 0 ? Math.min(-bestD * 0.7, 0.12) : 0;
-      const target = new V3(best.x, surfaceY(best.r, v) + (obj.userData.lift || 0) * S + stack, best.z);
+      placed.push({ x: best.x, z: best.z, r: fr * 0.8 });
+      const stack = bestD < 0 ? Math.min(-bestD * 0.5, 0.06) : 0;
+      const y = Math.min(surfaceY(best.r, v) + (obj.userData.lift || 0) * S + stack, TOP);
+      const target = new V3(best.x, y, best.z);
       const slope = Math.atan((surfaceY(best.r, v) - surfaceY(best.r + 0.05, v)) / 0.05);
       axis.set(-Math.sin(best.a), 0, Math.cos(best.a));
-      q1.setFromAxisAngle(up, rand(0, TAU)); q2.setFromAxisAngle(axis, -slope * 0.9 + rand(-0.15, 0.15));
+      q1.setFromAxisAngle(up, rand(0, TAU)); q2.setFromAxisAngle(axis, -slope * 0.8 + rand(-0.12, 0.12));
       g.quaternion.copy(q2).multiply(q1);
       out.push({ fruit: id, group: g, target });
     }
@@ -832,8 +839,8 @@ export function wallFruit(ids) {
   const use = ids.filter(id => WALL_OK[id]);
   const list = use.length ? use : ['strawberry', 'mango', 'kiwi'];
   const n = ids.length || 1;
-  for (const y of [0.92, 1.14, 1.36]) {
-    const R = cupR(y), count = Math.round((TAU * R) / 0.3);
+  for (const y of [0.95, 1.22]) {
+    const R = cupR(y), count = Math.round((TAU * R) / 0.36);
     for (let i = 0; i < count; i++) {
       const a = (i / count) * TAU + rand(-0.05, 0.05) + y * 0.7;
       // pick the fruit whose top sector this angle falls in (fallback to any wall-friendly fruit)
@@ -871,13 +878,13 @@ export function makeCup({ fruits = [], contactShadow = true, wall = true } = {})
   });
   const band = mesh(yg, MATC.yogurtCup()); band.position.y = 0.71; g.add(band);
   // fruit layer: yogurt core + ring of fruit against the wall
-  const fcore = mesh(new THREE.CylinderGeometry(cupR(1.4) - 0.24, cupR(0.85) - 0.24, 0.55, 48), MATC.fruitMix()); fcore.position.y = 1.12; g.add(fcore);
+  const fcore = mesh(new THREE.CylinderGeometry(cupR(1.4) - 0.24, cupR(0.85) - 0.24, 0.55, 48), MATC.yogurtCup()); fcore.position.y = 1.12; g.add(fcore);
   if (wall) g.add(wallFruit(fruits));
   // dome the top fruit sits on
   const v = VESSELS.cup;
   const dome = mesh(once('g.cdome', () => new THREE.SphereGeometry(1, 64, 24, 0, TAU, 0, Math.PI / 2)), MATC.yogurtCup());
-  const dr = v.domeR || v.R, dh = v.base + v.rise * Math.sqrt(1 - (dr / v.R) ** 2);
-  dome.scale.set(dr, dh - (v.base - 0.12), dr); dome.position.y = v.base - 0.12; dome.material = MATC.fruitMix(); dome.castShadow = false; dome.name = 'dome'; g.add(dome);
+  const dr = v.domeR || v.R, dh = v.base + v.rise;
+  dome.scale.set(dr, dh - (v.base - 0.12), dr); dome.position.y = v.base - 0.12; dome.material = MATC.yogurtCup(); dome.castShadow = false; dome.name = 'dome'; g.add(dome);
   if (contactShadow) {
     const t = once('t.contactCup', () => {
       const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d');

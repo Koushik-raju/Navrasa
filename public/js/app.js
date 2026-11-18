@@ -1,4 +1,5 @@
 import { webglAvailable, FRUIT_COLORS } from './colors.js';
+import { artFor } from './menu-art.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -125,12 +126,16 @@ const PHOTO_CATS = new Set(['fruit-bowls', 'smoothie-bowls']); // these show the
 let activeCat = 'all';
 function cardHtml(b, cat) {
   const [c1, c2] = CAT_STYLE[b.category] || ['#fff3e3', '#ffe2bf'];
-  const photo = b.image || (PHOTO_CATS.has(b.category) ? '/img/hero-cup.webp' : '');
-  const art = photo
-    ? `<img class="bowl-photo${b.image ? '' : ' default'}" src="${esc(photo)}" alt="${esc(b.name)}" loading="lazy" decoding="async" />`
-    : `<span class="cat-icon" aria-hidden="true">${esc(cat?.icon || '🍽️')}</span>`;
+  // a real uploaded photo wins; otherwise the item's own illustration
+  const art = b.image
+    ? `<img class="bowl-photo" src="${esc(b.image)}" alt="${esc(b.name)}" loading="lazy" decoding="async" />`
+    : artFor(b);
+  const inc = Array.isArray(b.includes) ? b.includes : [];
+  const incHtml = inc.length ? `<details class="incl"><summary>What's inside <span class="chev" aria-hidden="true">▾</span></summary>
+      <ul>${inc.map(t => `<li>${esc(t)}</li>`).join('')}</ul></details>` : '';
   if (b.category === 'addons') {
     return `<article class="addon-card" data-id="${esc(b.id)}">
+      <div class="addon-art">${b.image ? `<img src="${esc(b.image)}" alt="" loading="lazy" />` : artFor(b)}</div>
       <div><h4>${esc(b.name)}</h4><span class="portion">${esc(b.portion)}</span></div>
       <span class="price">${fmt(b.price)}</span>
       <button class="btn btn-primary add-btn sm" data-add="${esc(b.id)}" ${b.available ? '' : 'disabled'} aria-label="Add ${esc(b.name)}">${b.available ? '+' : 'Sold out'}</button>
@@ -144,6 +149,7 @@ function cardHtml(b, cat) {
     </div>
     <h3>${esc(b.name)}</h3>
     ${b.description ? `<p>${esc(b.description)}</p>` : '<p></p>'}
+    ${incHtml}
     <div class="bowl-meta">
       <span class="price">${fmt(b.price)}<span class="kcal">${esc(b.portion || '')}</span></span>
       <button class="btn btn-primary add-btn" data-add="${esc(b.id)}" ${b.available ? '' : 'disabled'}>Add +</button>

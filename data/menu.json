@@ -1,5 +1,5 @@
 {
-  "menuVersion": 2,
+  "menuVersion": 3,
   "currency": "₹",
   "deliveryFee": 30,
   "freeDeliveryAbove": 499,
@@ -63,7 +63,12 @@
         "watermelon"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Fresh watermelon cubes",
+        "Mint leaves",
+        "Pinch of black salt (optional)"
+      ]
     },
     {
       "id": "papaya-fresh-bowl",
@@ -75,7 +80,12 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Ripe papaya cubes",
+        "Squeeze of lime",
+        "Mint leaves"
+      ]
     },
     {
       "id": "seasonal-mix-bowl",
@@ -92,7 +102,14 @@
         "orange"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Apple",
+        "Banana",
+        "Grapes",
+        "Orange / seasonal fruit",
+        "Pomegranate pearls"
+      ]
     },
     {
       "id": "tropical-fruit-bowl",
@@ -109,7 +126,14 @@
         "watermelon"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Pineapple",
+        "Mango",
+        "Banana",
+        "Watermelon",
+        "Mint"
+      ]
     },
     {
       "id": "fruit-seed-bowl",
@@ -126,7 +150,15 @@
         "kiwi"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Banana",
+        "Apple",
+        "Kiwi",
+        "Pomegranate",
+        "Chia seeds",
+        "Mixed seeds (pumpkin, sunflower, flax)"
+      ]
     },
     {
       "id": "mango-fruit-bowl",
@@ -140,7 +172,11 @@
         "mango"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Fresh mango cubes",
+        "Mint leaves"
+      ]
     },
     {
       "id": "apple-pomegranate-bowl",
@@ -155,7 +191,12 @@
         "pomegranate"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Crisp apple cubes",
+        "Pomegranate pearls",
+        "Squeeze of lime"
+      ]
     },
     {
       "id": "banana-smoothie",
@@ -169,7 +210,13 @@
         "banana"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Banana",
+        "Milk",
+        "Honey",
+        "Ice"
+      ]
     },
     {
       "id": "banana-oats-smoothie",
@@ -183,7 +230,13 @@
         "banana"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Banana",
+        "Rolled oats",
+        "Milk",
+        "Honey"
+      ]
     },
     {
       "id": "mango-smoothie",
@@ -197,7 +250,13 @@
         "mango"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Ripe mango",
+        "Milk",
+        "Yogurt",
+        "Ice"
+      ]
     },
     {
       "id": "choco-banana-smoothie",
@@ -211,7 +270,13 @@
         "banana"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Banana",
+        "Cocoa powder",
+        "Milk",
+        "Dates"
+      ]
     },
     {
       "id": "strawberry-smoothie",
@@ -225,7 +290,13 @@
         "strawberry"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Fresh strawberries",
+        "Milk",
+        "Yogurt",
+        "Honey"
+      ]
     },
     {
       "id": "pineapple-coconut-smoothie",
@@ -239,7 +310,13 @@
         "pineapple"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Pineapple",
+        "Coconut milk",
+        "Banana",
+        "Ice"
+      ]
     },
     {
       "id": "banana-peanut-butter-smoothie",
@@ -253,7 +330,13 @@
         "banana"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Banana",
+        "Peanut butter",
+        "Milk",
+        "Honey"
+      ]
     },
     {
       "id": "mango-banana-smoothie",
@@ -268,7 +351,13 @@
         "banana"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Mango",
+        "Banana",
+        "Milk",
+        "Ice"
+      ]
     },
     {
       "id": "apple-cinnamon-smoothie",
@@ -282,7 +371,14 @@
         "apple"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Apple",
+        "Cinnamon",
+        "Milk",
+        "Oats",
+        "Honey"
+      ]
     },
     {
       "id": "dates-banana-smoothie",
@@ -296,7 +392,13 @@
         "banana"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Dates",
+        "Banana",
+        "Milk",
+        "Ice"
+      ]
     },
     {
       "id": "banana-crunch-bowl",
@@ -310,7 +412,14 @@
         "banana"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Banana smoothie base",
+        "Granola",
+        "Banana slices",
+        "Chia seeds",
+        "Honey drizzle"
+      ]
     },
     {
       "id": "mango-tropical-bowl",
@@ -325,7 +434,14 @@
         "pineapple"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Mango smoothie base",
+        "Pineapple",
+        "Mango cubes",
+        "Coconut flakes",
+        "Chia seeds"
+      ]
     },
     {
       "id": "choco-banana-bowl",
@@ -339,7 +455,13 @@
         "banana"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Cocoa-banana base",
+        "Banana slices",
+        "Granola",
+        "Cocoa nibs / chocolate shavings"
+      ]
     },
     {
       "id": "peanut-butter-bowl",
@@ -353,7 +475,14 @@
         "banana"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Peanut butter & banana base",
+        "Banana slices",
+        "Granola",
+        "Peanut butter drizzle",
+        "Mixed seeds"
+      ]
     },
     {
       "id": "fruit-granola-bowl",
@@ -370,7 +499,16 @@
         "blueberry"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Smoothie base",
+        "Strawberry",
+        "Banana",
+        "Kiwi",
+        "Blueberries",
+        "Granola",
+        "Mint"
+      ]
     },
     {
       "id": "watermelon-juice",
@@ -384,7 +522,12 @@
         "watermelon"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Fresh watermelon",
+        "Mint",
+        "Ice (optional)"
+      ]
     },
     {
       "id": "mosambi-juice",
@@ -398,7 +541,11 @@
         "orange"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Fresh mosambi (sweet lime)",
+        "No added sugar"
+      ]
     },
     {
       "id": "pineapple-juice",
@@ -412,7 +559,11 @@
         "pineapple"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Fresh pineapple",
+        "Pinch of black salt (optional)"
+      ]
     },
     {
       "id": "orange-juice",
@@ -426,7 +577,11 @@
         "orange"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Fresh-squeezed orange",
+        "No added sugar"
+      ]
     },
     {
       "id": "papaya-smooth-juice",
@@ -438,7 +593,11 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Ripe papaya",
+        "Squeeze of lime"
+      ]
     },
     {
       "id": "carrot-juice",
@@ -450,7 +609,12 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Fresh carrot",
+        "Ginger",
+        "Squeeze of lime"
+      ]
     },
     {
       "id": "beetroot-juice",
@@ -462,7 +626,13 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Beetroot",
+        "Carrot",
+        "Ginger",
+        "Lime"
+      ]
     },
     {
       "id": "cucumber-mint-cooler",
@@ -474,7 +644,13 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Cucumber",
+        "Mint",
+        "Lime",
+        "Black salt"
+      ]
     },
     {
       "id": "pomegranate-juice",
@@ -488,7 +664,11 @@
         "pomegranate"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "100% pomegranate",
+        "No added sugar"
+      ]
     },
     {
       "id": "apple-juice",
@@ -502,7 +682,11 @@
         "apple"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Fresh apple",
+        "No added sugar"
+      ]
     },
     {
       "id": "mixed-fruit-juice",
@@ -518,7 +702,13 @@
         "pineapple"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Orange",
+        "Apple",
+        "Pineapple",
+        "Seasonal fruit"
+      ]
     },
     {
       "id": "garden-crunch-salad",
@@ -530,7 +720,15 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Lettuce",
+        "Cucumber",
+        "Tomato",
+        "Carrot",
+        "Capsicum",
+        "Lemon-herb dressing"
+      ]
     },
     {
       "id": "chickpea-chaat-salad",
@@ -542,7 +740,15 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Boiled chickpeas",
+        "Onion",
+        "Tomato",
+        "Cucumber",
+        "Coriander",
+        "Chaat masala & lime"
+      ]
     },
     {
       "id": "paneer-power-salad",
@@ -554,7 +760,15 @@
       "tag": "High protein",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Paneer cubes",
+        "Lettuce",
+        "Cucumber",
+        "Capsicum",
+        "Cherry tomato",
+        "Herb dressing"
+      ]
     },
     {
       "id": "sweet-corn-salad",
@@ -566,7 +780,14 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Sweet corn",
+        "Capsicum",
+        "Onion",
+        "Tomato",
+        "Butter-lime dressing"
+      ]
     },
     {
       "id": "sprouts-veggie-salad",
@@ -578,7 +799,15 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Moong sprouts",
+        "Onion",
+        "Tomato",
+        "Cucumber",
+        "Coriander",
+        "Lime"
+      ]
     },
     {
       "id": "quinoa-veggie-salad",
@@ -590,7 +819,14 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Quinoa",
+        "Bell peppers",
+        "Cucumber",
+        "Cherry tomato",
+        "Olive-oil lemon dressing"
+      ]
     },
     {
       "id": "premium-paneer-salad",
@@ -602,7 +838,15 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Grilled paneer",
+        "Mixed greens",
+        "Cherry tomato",
+        "Bell peppers",
+        "Mixed seeds",
+        "Herb dressing"
+      ]
     },
     {
       "id": "cucumber-corn-salad",
@@ -614,7 +858,14 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Cucumber",
+        "Sweet corn",
+        "Onion",
+        "Mint",
+        "Lime dressing"
+      ]
     },
     {
       "id": "banana-overnight-oats",
@@ -628,7 +879,14 @@
         "banana"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Rolled oats soaked overnight",
+        "Milk",
+        "Banana",
+        "Chia seeds",
+        "Honey"
+      ]
     },
     {
       "id": "chocolate-overnight-oats",
@@ -640,7 +898,14 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Rolled oats",
+        "Milk",
+        "Cocoa",
+        "Banana",
+        "Chia seeds"
+      ]
     },
     {
       "id": "fruit-yogurt-parfait",
@@ -655,7 +920,14 @@
         "banana"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Greek yogurt",
+        "Granola",
+        "Strawberry",
+        "Banana",
+        "Honey"
+      ]
     },
     {
       "id": "chia-fruit-pudding",
@@ -670,7 +942,13 @@
         "banana"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Chia seeds soaked in milk",
+        "Mango",
+        "Banana",
+        "Honey"
+      ]
     },
     {
       "id": "chickpea-power-bowl",
@@ -682,7 +960,15 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Chickpeas",
+        "Cucumber",
+        "Tomato",
+        "Onion",
+        "Coriander",
+        "Lemon dressing"
+      ]
     },
     {
       "id": "paneer-veggie-bowl",
@@ -694,7 +980,14 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Sautéed paneer",
+        "Capsicum",
+        "Onion",
+        "Sweet corn",
+        "Herbs & spices"
+      ]
     },
     {
       "id": "mango-yogurt-parfait",
@@ -708,7 +1001,13 @@
         "mango"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Greek yogurt",
+        "Mango",
+        "Granola",
+        "Honey"
+      ]
     },
     {
       "id": "extra-banana",
@@ -722,7 +1021,8 @@
         "banana"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": []
     },
     {
       "id": "extra-apple",
@@ -736,7 +1036,8 @@
         "apple"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": []
     },
     {
       "id": "pomegranate",
@@ -750,7 +1051,8 @@
         "pomegranate"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": []
     },
     {
       "id": "mixed-seeds",
@@ -762,7 +1064,8 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": []
     },
     {
       "id": "chia-seeds",
@@ -774,7 +1077,8 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": []
     },
     {
       "id": "granola",
@@ -786,7 +1090,8 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": []
     },
     {
       "id": "oats",
@@ -798,7 +1103,8 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": []
     },
     {
       "id": "peanut-butter",
@@ -810,7 +1116,8 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": []
     },
     {
       "id": "yogurt-dip",
@@ -822,7 +1129,8 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": []
     },
     {
       "id": "extra-paneer",
@@ -834,7 +1142,8 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": []
     },
     {
       "id": "chickpeas",
@@ -846,7 +1155,8 @@
       "tag": "",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": []
     },
     {
       "id": "morning-fresh-combo",
@@ -860,7 +1170,11 @@
         "watermelon"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Small fruit bowl",
+        "Watermelon juice (250 ml)"
+      ]
     },
     {
       "id": "healthy-lunch-combo",
@@ -874,7 +1188,11 @@
         "banana"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Garden Crunch Salad",
+        "Banana Smoothie (250 ml)"
+      ]
     },
     {
       "id": "breakfast-combo",
@@ -888,7 +1206,11 @@
         "banana"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "Banana Overnight Oats",
+        "Banana Smoothie (250 ml)"
+      ]
     },
     {
       "id": "share-enjoy-combo",
@@ -905,7 +1227,11 @@
         "orange"
       ],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "2 × Seasonal Mix Bowl",
+        "2 × Banana Smoothie (250 ml)"
+      ]
     },
     {
       "id": "5-day-fresh-fruit-plan",
@@ -917,7 +1243,12 @@
       "tag": "Plan",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "5 fruit bowls — one a day for 5 days",
+        "Different fruits each day",
+        "Delivered fresh every morning"
+      ]
     },
     {
       "id": "5-day-smoothie-plan",
@@ -929,7 +1260,12 @@
       "tag": "Plan",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "5 smoothies — one a day for 5 days",
+        "Different flavour each day",
+        "Delivered fresh every morning"
+      ]
     },
     {
       "id": "5-day-salad-plan",
@@ -941,7 +1277,12 @@
       "tag": "Plan",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "5 salads — one a day for 5 days",
+        "Different salad each day",
+        "Delivered fresh"
+      ]
     },
     {
       "id": "5-day-mixed-healthy-plan",
@@ -953,7 +1294,12 @@
       "tag": "Plan",
       "fruits": [],
       "available": true,
-      "image": ""
+      "image": "",
+      "includes": [
+        "5 items — one a day for 5 days",
+        "Mix of fruit bowls, smoothies, salads and oats",
+        "Delivered fresh"
+      ]
     }
   ],
   "custom": {

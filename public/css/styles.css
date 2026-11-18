@@ -265,3 +265,31 @@ legend { padding: 0; margin-bottom: .4rem; }
 @media (max-width: 560px) { .cat-grid { grid-template-columns: 1fr 1fr; gap: .8rem; } .cat-grid .bowl-art { height: 120px; } .cat-grid .bowl-card { padding: .8rem; } .cat-grid .bowl-card p { display: none; } .cat-grid .bowl-meta { flex-direction: column; align-items: stretch; } .cat-icon { font-size: 3rem; } .menu-tabs { top: 56px; } }
 
 @media (min-width: 900px) { .menu-tabs { flex-wrap: wrap; justify-content: center; overflow: visible; } }
+
+/* menu illustrations */
+.menu-art { width: 100%; height: 100%; display: block; transition: transform .45s cubic-bezier(.2,.8,.2,1); filter: drop-shadow(0 6px 8px rgba(90,50,10,.08)); }
+.bowl-card:hover .menu-art { transform: scale(1.06) translateY(-2px); }
+.cat-grid .bowl-art { padding: 6px 4px 0; }
+/* "What's inside" dropdown */
+.incl { margin: -.4rem 0 1rem; border: 1.5px solid var(--line); border-radius: 12px; background: #fffaf3; font-size: .88rem; }
+.incl summary { list-style: none; cursor: pointer; padding: .5em .85em; font-weight: 700; color: var(--green); display: flex; justify-content: space-between; align-items: center; user-select: none; }
+.incl summary::-webkit-details-marker { display: none; }
+.incl .chev { transition: transform .25s; font-size: .8rem; }
+.incl[open] .chev { transform: rotate(180deg); }
+.incl ul { margin: 0; padding: 0 .9em .7em 1.9em; color: var(--ink-2); line-height: 1.6; }
+.incl li::marker { color: var(--coral); }
+.bowl-card p { flex: 0 0 auto; }
+.bowl-card .bowl-meta { margin-top: auto; }
+@media (max-width: 560px) { .incl { font-size: .8rem; } .incl summary { padding: .45em .6em; } }
+
+.addon-card { grid-template-columns: 58px 1fr auto auto; padding: .55rem .9rem .55rem .55rem; }
+.addon-art { width: 58px; height: 46px; border-radius: 10px; background: linear-gradient(135deg, #eef2e6, #e3ead4); overflow: hidden; display: grid; place-items: center; }
+.addon-art svg { width: 100%; height: 100%; transform: scale(1.5) translateY(-4%); }
+.addon-art img { width: 100%; height: 100%; object-fit: cover; }
+/* the ingredient list floats over the cards below instead of stretching the row */
+.incl { position: relative; }
+.incl[open] { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.incl ul { position: absolute; left: -1.5px; right: -1.5px; top: 100%; z-index: 6; background: #fffaf3; border: 1.5px solid var(--line); border-top: 0;
+  border-radius: 0 0 12px 12px; box-shadow: 0 16px 28px -14px rgba(60,35,10,.35); padding-top: .2em; animation: incl-in .18s ease; }
+@keyframes incl-in { from { opacity: 0; transform: translateY(-4px); } }
+.bowl-card:has(.incl[open]) { position: relative; z-index: 4; }
