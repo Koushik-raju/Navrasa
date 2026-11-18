@@ -228,3 +228,9 @@ input:focus, select:focus, textarea:focus { outline: 2px solid rgba(255, 90, 60,
 .step-btn:disabled { opacity: .45; cursor: default; }
 .step-btn.next:disabled { background: #e5f5ea; color: var(--s-delivered); border-color: #cfe9d7; opacity: 1; }
 .step-btn { text-transform: capitalize; }
+
+.menu-filter { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+.menu-filter select { width: auto; } .menu-filter input { flex: 1 1 200px; width: auto; }
+.bowl-row[hidden] { display: none !important; }
+.bowl-row .desc { grid-column: 2 / span 3; } .bowl-row .tagf { grid-column: span 2; }
+@media (max-width: 860px) { .bowl-row .desc, .bowl-row .tagf { grid-column: 1 / -1; } }

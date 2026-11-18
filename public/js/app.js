@@ -102,7 +102,7 @@ addEventListener('scroll', onScroll, { passive: true }); onScroll();
 $('#year').textContent = new Date().getFullYear();
 
 // ---------------- menu ----------------
-function bowlArt(b) {
+function bowlArt(b) { // (legacy, unused)
   const dots = [];
   const n = 13;
   for (let i = 0; i < n; i++) {
@@ -116,23 +116,58 @@ function bowlArt(b) {
 }
 let thumbs = {};
 const thumbKey = b => b.id + ':' + b.fruits.join(',');
-function renderMenu() {
-  $('#menuGrid').innerHTML = MENU.bowls.map(b => `
-    <article class="bowl-card" data-id="${esc(b.id)}">
-      <div class="bowl-art" style="background:linear-gradient(135deg, ${FRUIT_COLORS[b.fruits[0]] || '#ffd'}33, ${FRUIT_COLORS[b.fruits[1]] || '#fed'}55)">
-        ${b.tag ? `<span class="tag">${esc(b.tag)}</span>` : ''}
-        ${true ? `<img class="bowl-photo${b.image ? '' : ' default'}" src="${esc(b.image || '/img/hero-cup.webp')}" alt="${esc(b.name)} fruit bowl" loading="lazy" decoding="async" />` : `<div class="dish"></div>
-        <div style="position:absolute;left:50%;top:22%;width:150px;height:60px;transform:translateX(-50%)">${bowlArt(b)}</div>`}
-        ${b.available ? '' : '<div class="soldout">SOLD OUT</div>'}
-      </div>
-      <h3>${esc(b.name)}</h3>
-      <p>${esc(b.description)}</p>
-      <div class="bowl-meta">
-        <span class="price">${fmt(b.price)}<span class="kcal">${b.calories ? b.calories + ' kcal' : ''}</span></span>
-        <button class="btn btn-primary add-btn" data-add="${esc(b.id)}" ${b.available ? '' : 'disabled'}>Add +</button>
-      </div>
-    </article>`).join('');
+const CAT_STYLE = {
+  'fruit-bowls': ['#ffe1d6', '#ffd0a8'], 'smoothies': ['#ffe7c2', '#ffd6e0'], 'smoothie-bowls': ['#f3dcff', '#ffd6e0'],
+  'juices': ['#fff1b8', '#ffd59e'], 'salads': ['#dff5d0', '#c9ecb6'], 'breakfast': ['#f6ead8', '#ffe2bf'],
+  'addons': ['#eef2e6', '#e3ead4'], 'combos': ['#ffe0d1', '#ffcfb8'], 'plans': ['#dcefe3', '#cfe6f4'],
+};
+const PHOTO_CATS = new Set(['fruit-bowls', 'smoothie-bowls']); // these show the Navrasa cup photo until a real photo is uploaded
+let activeCat = 'all';
+function cardHtml(b, cat) {
+  const [c1, c2] = CAT_STYLE[b.category] || ['#fff3e3', '#ffe2bf'];
+  const photo = b.image || (PHOTO_CATS.has(b.category) ? '/img/hero-cup.webp' : '');
+  const art = photo
+    ? `<img class="bowl-photo${b.image ? '' : ' default'}" src="${esc(photo)}" alt="${esc(b.name)}" loading="lazy" decoding="async" />`
+    : `<span class="cat-icon" aria-hidden="true">${esc(cat?.icon || '🍽️')}</span>`;
+  if (b.category === 'addons') {
+    return `<article class="addon-card" data-id="${esc(b.id)}">
+      <div><h4>${esc(b.name)}</h4><span class="portion">${esc(b.portion)}</span></div>
+      <span class="price">${fmt(b.price)}</span>
+      <button class="btn btn-primary add-btn sm" data-add="${esc(b.id)}" ${b.available ? '' : 'disabled'} aria-label="Add ${esc(b.name)}">${b.available ? '+' : 'Sold out'}</button>
+    </article>`;
+  }
+  return `<article class="bowl-card" data-id="${esc(b.id)}">
+    <div class="bowl-art" style="background:linear-gradient(135deg, ${c1}, ${c2})">
+      ${b.tag ? `<span class="tag">${esc(b.tag)}</span>` : ''}
+      ${art}
+      ${b.available ? '' : '<div class="soldout">SOLD OUT</div>'}
+    </div>
+    <h3>${esc(b.name)}</h3>
+    ${b.description ? `<p>${esc(b.description)}</p>` : '<p></p>'}
+    <div class="bowl-meta">
+      <span class="price">${fmt(b.price)}<span class="kcal">${esc(b.portion || '')}</span></span>
+      <button class="btn btn-primary add-btn" data-add="${esc(b.id)}" ${b.available ? '' : 'disabled'}>Add +</button>
+    </div>
+  </article>`;
 }
+function renderMenu() {
+  const cats = (MENU.categories && MENU.categories.length ? MENU.categories : [{ id: '', name: 'Menu', icon: '🍓' }])
+    .map(c => ({ ...c, items: MENU.bowls.filter(b => (b.category || '') === c.id) }))
+    .filter(c => c.items.length);
+  if (activeCat !== 'all' && !cats.some(c => c.id === activeCat)) activeCat = 'all';
+  $('#menuTabs').innerHTML = [`<button data-cat="all" class="${activeCat === 'all' ? 'on' : ''}">All <b>${MENU.bowls.length}</b></button>`]
+    .concat(cats.map(c => `<button data-cat="${esc(c.id)}" class="${activeCat === c.id ? 'on' : ''}">${esc(c.icon || '')} ${esc(c.name)} <b>${c.items.length}</b></button>`)).join('');
+  $('#menuGrid').innerHTML = cats.filter(c => activeCat === 'all' || c.id === activeCat).map(c => `
+    <section class="menu-cat" id="cat-${esc(c.id)}">
+      <h3 class="cat-title"><span>${esc(c.icon || '')}</span> ${esc(c.name)} <small>${c.items.length} item${c.items.length > 1 ? 's' : ''}</small></h3>
+      <div class="${c.id === 'addons' ? 'addon-grid' : 'cat-grid'}">${c.items.map(b => cardHtml(b, c)).join('')}</div>
+    </section>`).join('');
+}
+$('#menuTabs').addEventListener('click', e => {
+  const t = e.target.closest('[data-cat]'); if (!t) return;
+  activeCat = t.dataset.cat; renderMenu();
+  $('#menu').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
 $('#menuGrid').addEventListener('click', e => {
   const btn = e.target.closest('[data-add]'); if (!btn) return;
   const b = MENU.bowls.find(x => x.id === btn.dataset.add);

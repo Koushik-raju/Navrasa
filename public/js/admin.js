@@ -10,6 +10,7 @@
   const dLabel = d => new Date(d + 'T00:00').toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
   const localISO = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
+  const menuFilter = { cat: '', q: '' };
   let orders = [], stats = null, menu = null, view = 'dashboard', filter = { status: 'all', q: '', date: '' };
   let knownIds = null, freshIds = new Set(), openId = null, menuDirty = false;
 
@@ -389,7 +390,12 @@
     };
   }
   function renderEdItems() {
-    const opts = it => edMenu.bowls.map(b => `<option value="${b.id}" ${it.type === 'bowl' && it.id === b.id ? 'selected' : ''}>${esc(b.name)} — ${fmt(b.price)}${b.available ? '' : ' (sold out)'}</option>`).join('') +
+    const opt = (b, it) => `<option value="${b.id}" ${it.type === 'bowl' && it.id === b.id ? 'selected' : ''}>${esc(b.name)}${b.portion ? ' · ' + esc(b.portion) : ''} — ${fmt(b.price)}${b.available ? '' : ' (sold out)'}</option>`;
+    const cats = edMenu.categories || [];
+    const opts = it => (cats.length
+      ? cats.map(c => { const list = edMenu.bowls.filter(b => b.category === c.id); return list.length ? `<optgroup label="${esc(c.name)}">${list.map(b => opt(b, it)).join('')}</optgroup>` : ''; }).join('')
+        + edMenu.bowls.filter(b => !cats.some(c => c.id === b.category)).map(b => opt(b, it)).join('')
+      : edMenu.bowls.map(b => opt(b, it)).join('')) +
       `<option value="__custom" ${it.type === 'custom' ? 'selected' : ''}>Custom bowl</option>`;
     $('#edItems').innerHTML = edItems.map((it, i) => `
       <div class="ed-item" data-i="${i}">
@@ -444,7 +450,7 @@
   }
   function renderMenuEditor() {
     $('#mCurrency').value = menu.currency; $('#mFee').value = menu.deliveryFee; $('#mFree').value = menu.freeDeliveryAbove; $('#mBase').value = menu.custom.basePrice;
-    const fruitOpts = menu.custom.fruits;
+    const cats = menu.categories || [];
     $('#bowlEditor').innerHTML = menu.bowls.map((b, i) => `
       <div class="bowl-row" data-i="${i}" data-image="${esc(b.image || '')}">
         <div class="photo-cell">
@@ -453,16 +459,18 @@
           ${b.image ? '<button type="button" class="link" data-rmphoto>Remove</button>' : ''}
         </div>
         <label>Name<input data-k="name" value="${esc(b.name)}" maxlength="60" /></label>
+        <label>Category<select data-k="category">${cats.map(c => `<option value="${esc(c.id)}" ${c.id === b.category ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></label>
+        <label>Portion<input data-k="portion" value="${esc(b.portion || '')}" maxlength="30" placeholder="e.g. 250 ml" /></label>
         <label>Price<input data-k="price" type="number" min="0" step="1" value="${b.price}" /></label>
-        <label>Calories<input data-k="calories" type="number" min="0" value="${b.calories || 0}" /></label>
-        <label>Tag<input data-k="tag" value="${esc(b.tag)}" maxlength="20" /></label>
         <div style="display:flex;gap:8px;align-items:center">
           <label class="toggle"><input type="checkbox" data-k="available" ${b.available ? 'checked' : ''}/> In stock</label>
-          <button class="btn sm danger" data-del="${i}" title="Remove bowl">🗑</button>
+          <button class="btn sm danger" data-del="${i}" title="Remove item">🗑</button>
         </div>
         <label class="desc">Description<input data-k="description" value="${esc(b.description)}" maxlength="300" /></label>
-        <div class="fr">${fruitOpts.map(f => `<label><input type="checkbox" data-fruit="${f.id}" ${b.fruits.includes(f.id) ? 'checked' : ''}/> ${esc(f.name)}</label>`).join('')}</div>
-      </div>`).join('') || '<p class="nodata">No bowls. Add one!</p>';
+        <label class="tagf">Tag<input data-k="tag" value="${esc(b.tag)}" maxlength="20" placeholder="e.g. Popular" /></label>
+      </div>`).join('') || '<p class="nodata">No items. Add one!</p>';
+    $('#menuCat').innerHTML = `<option value="">All categories (${menu.bowls.length})</option>` + cats.map(c => `<option value="${esc(c.id)}">${esc(c.icon || '')} ${esc(c.name)} (${menu.bowls.filter(b => b.category === c.id).length})</option>`).join('');
+    $('#menuCat').value = menuFilter.cat; filterMenuRows();
     $('#fruitPrices').innerHTML = menu.custom.fruits.map(f => `<label>${esc(f.name)}<input type="number" min="0" data-fp="${f.id}" value="${f.price}" /></label>`).join('');
     $('#topPrices').innerHTML = menu.custom.toppings.map(t => `<label>${esc(t.name)}<input type="number" min="0" data-tp="${t.id}" value="${t.price}" /></label>`).join('');
     menuDirty = false; $('#menuMsg').textContent = 'Changes go live on the shop as soon as you save.';
@@ -473,8 +481,8 @@
       bowls: $$('.bowl-row').map(row => {
         const orig = menu.bowls[+row.dataset.i] || {};
         const v = k => $(`[data-k="${k}"]`, row);
-        return { id: orig.id || v('name').value, name: v('name').value, price: v('price').value, calories: v('calories').value, tag: v('tag').value,
-          description: v('description').value, available: v('available').checked, image: row.dataset.image || '', fruits: $$('[data-fruit]:checked', row).map(c => c.dataset.fruit) };
+        return { id: orig.id || v('name').value, name: v('name').value, category: v('category').value, portion: v('portion').value, price: v('price').value, tag: v('tag').value,
+          description: v('description').value, available: v('available').checked, image: row.dataset.image || '', fruits: orig.fruits || [] };
       }),
       custom: {
         basePrice: $('#mBase').value,
@@ -486,11 +494,26 @@
   $('[data-panel="menu"]').addEventListener('input', () => { menuDirty = true; $('#menuMsg').textContent = '● Unsaved changes'; });
   $('#addBowl').onclick = () => {
     menu = { ...menu, ...collectMenu(), custom: menu.custom };
-    menu.bowls.push({ id: '', name: 'New bowl', description: '', price: 199, calories: 0, tag: 'New', fruits: [], available: false });
+    const cat = menuFilter.cat || menu.categories?.[0]?.id || '';
+    menu.bowls.push({ id: '', name: 'New item', category: cat, portion: '', description: '', price: 99, tag: 'New', fruits: [], available: false });
     const keep = collectMenu().custom;
+    menuFilter.q = ''; $('#menuSearch').value = '';
     renderMenuEditor(); restoreCustom(keep);
-    menuDirty = true; $('#menuMsg').textContent = '● Unsaved changes — new bowls start out of stock';
+    $('#bowlEditor .bowl-row:last-child')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    menuDirty = true; $('#menuMsg').textContent = '● Unsaved changes — new items start out of stock';
   };
+  // filter the editor by category / search (rows are only hidden, so Save still includes every item)
+  function filterMenuRows() {
+    const q = menuFilter.q.trim().toLowerCase(); let shown = 0;
+    $$('#bowlEditor .bowl-row').forEach(row => {
+      const cat = $('[data-k="category"]', row).value, name = $('[data-k="name"]', row).value.toLowerCase();
+      const ok = (!menuFilter.cat || cat === menuFilter.cat) && (!q || name.includes(q));
+      row.hidden = !ok; if (ok) shown++;
+    });
+    $('#menuCount').textContent = `${shown} shown`;
+  }
+  $('#menuCat').addEventListener('change', e => { menuFilter.cat = e.target.value; filterMenuRows(); });
+  $('#menuSearch').addEventListener('input', e => { menuFilter.q = e.target.value; filterMenuRows(); });
   function restoreCustom(c) { c.fruits.forEach(f => { const el = $(`[data-fp="${f.id}"]`); if (el) el.value = f.price; }); c.toppings.forEach(t => { const el = $(`[data-tp="${t.id}"]`); if (el) el.value = t.price; }); $('#mBase').value = c.basePrice; }
   // resize photos in the browser (max 1600px) so uploads are small and fast, whatever the host
   async function shrinkImage(file, max = 1600) {

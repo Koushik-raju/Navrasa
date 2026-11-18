@@ -36,7 +36,7 @@ Back up the `data/` folder regularly. You can also download orders as **CSV** (o
 - Build-your-own uses a live 3D cup so customers see their picked fruit and toppings land in it
 - **Real photos on menu cards:** Admin → Menu & prices → *Upload photo* on any bowl. Cards without a photo show a 3D render of that bowl's fruit
 - Menu card photos are rendered from the same 3D models, so they always match each bowl's fruit list
-- Menu of signature bowls (3D tilt cards, sold-out handling)
+- Full Navrasa menu: 67 items in 9 categories (fruit bowls, smoothies, smoothie bowls, juices, salads, breakfast, add-ons, combos, 5-day plans) with portions and prices, category tabs, sold-out handling
 - **Build-your-own bowl in 3D** — pick 2–8 fruits and they drop into the bowl live; toppings; live price
 - Cart (saved in the browser), free-delivery threshold, quantity controls
 - Checkout: name, phone, email, address, delivery date (up to 14 days) + 2-hour slot, payment on delivery (cash/UPI/card), notes
@@ -48,7 +48,7 @@ Back up the `data/` folder regularly. You can also download orders as **CSV** (o
 - Orders: filter by status / delivery day, search, click for full details; one-click status changes (pending → preparing → out for delivery → delivered / cancelled), internal notes, call/WhatsApp/map links, print slip, delete
 - Auto-refresh every 15 s with a sound + toast when a new order arrives
 - Customers list with order count and total spend
-- Menu editor: prices, descriptions, tags, in-stock toggle, add/remove bowls, custom-bowl prices, delivery fee, currency
+- Menu editor: category, portion, price, description, tag, photo and in-stock for every item; filter by category or search; add/remove items; build-your-own prices, delivery fee, currency
 
 **Safety built in:** prices are always recalculated on the server (customers can't tamper with totals), input validation, rate limiting on orders/login/tracking, atomic file writes, path-traversal protection.
 
@@ -92,3 +92,7 @@ Three.js (MIT) is bundled in `public/vendor/three`, so the site needs no CDN.
 `tools/make-hero-3d.py` (Python + Pillow + NumPy) rebuilds the hero cut-out and depth map from `tools/source-photo.webp`. Its cup-outline numbers are tuned to the current photo, so a new photo with different framing needs them adjusted.
 
 Uploaded menu photos are stored in `data/uploads/`; back them up with the rest of `data/`.
+
+## Changing the menu file
+
+`data/menu.json` holds the full menu. If you edit it by hand, raise `menuVersion` by 1 — the live site then replaces any older menu saved from the admin panel with this file. (Edits made in the admin panel are kept until then.)

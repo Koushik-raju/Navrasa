@@ -1,37 +1,1051 @@
 {
+  "menuVersion": 2,
   "currency": "₹",
   "deliveryFee": 30,
   "freeDeliveryAbove": 499,
+  "categories": [
+    {
+      "id": "fruit-bowls",
+      "name": "Fruit Bowls",
+      "icon": "🍓"
+    },
+    {
+      "id": "smoothies",
+      "name": "Smoothies",
+      "icon": "🥤"
+    },
+    {
+      "id": "smoothie-bowls",
+      "name": "Smoothie Bowls",
+      "icon": "🥣"
+    },
+    {
+      "id": "juices",
+      "name": "Fresh Juices",
+      "icon": "🧃"
+    },
+    {
+      "id": "salads",
+      "name": "Healthy Salads",
+      "icon": "🥗"
+    },
+    {
+      "id": "breakfast",
+      "name": "Breakfast & Oats",
+      "icon": "🥛"
+    },
+    {
+      "id": "addons",
+      "name": "Add-ons",
+      "icon": "➕"
+    },
+    {
+      "id": "combos",
+      "name": "Combos",
+      "icon": "🎁"
+    },
+    {
+      "id": "plans",
+      "name": "Subscription Plans",
+      "icon": "📅"
+    }
+  ],
   "bowls": [
-    { "id": "sunrise", "name": "Sunrise Citrus", "description": "Orange, mango, pineapple and kiwi with a squeeze of lime and mint.", "price": 199, "calories": 260, "tag": "Bestseller", "fruits": ["orange", "mango", "pineapple", "kiwi"], "available": true },
-    { "id": "berry-blast", "name": "Berry Blast", "description": "Strawberries, blueberries, grapes and pomegranate pearls on Greek yogurt.", "price": 249, "calories": 310, "tag": "Antioxidant", "fruits": ["strawberry", "blueberry", "grapes", "pomegranate"], "available": true },
-    { "id": "tropical", "name": "Tropical Escape", "description": "Mango, pineapple, banana and watermelon with toasted coconut flakes.", "price": 229, "calories": 290, "tag": "Summer", "fruits": ["mango", "pineapple", "banana", "watermelon"], "available": true },
-    { "id": "green-detox", "name": "Green Detox", "description": "Kiwi, green apple, grapes and banana with chia seeds and a honey drizzle.", "price": 219, "calories": 240, "tag": "Detox", "fruits": ["kiwi", "apple", "grapes", "banana"], "available": true },
-    { "id": "protein-power", "name": "Protein Power", "description": "Banana, strawberry and blueberry over yogurt with granola and peanut butter.", "price": 279, "calories": 420, "tag": "Gym", "fruits": ["banana", "strawberry", "blueberry", "apple"], "available": true },
-    { "id": "rainbow", "name": "Rainbow Royale", "description": "A bit of everything: seven fruits, every colour, made fresh each morning.", "price": 299, "calories": 340, "tag": "Signature", "fruits": ["strawberry", "orange", "mango", "kiwi", "blueberry", "grapes", "pomegranate"], "available": true }
+    {
+      "id": "watermelon-fresh-bowl",
+      "name": "Watermelon Fresh Bowl",
+      "category": "fruit-bowls",
+      "portion": "200 g",
+      "description": "Chilled, hand-cut watermelon cubes.",
+      "price": 35,
+      "tag": "",
+      "fruits": [
+        "watermelon"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "papaya-fresh-bowl",
+      "name": "Papaya Fresh Bowl",
+      "category": "fruit-bowls",
+      "portion": "200 g",
+      "description": "Ripe papaya, cut fresh — great for digestion.",
+      "price": 49,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "seasonal-mix-bowl",
+      "name": "Seasonal Mix Bowl",
+      "category": "fruit-bowls",
+      "portion": "250 g",
+      "description": "A mix of the best fruits of the season.",
+      "price": 79,
+      "tag": "Popular",
+      "fruits": [
+        "apple",
+        "banana",
+        "grapes",
+        "orange"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "tropical-fruit-bowl",
+      "name": "Tropical Fruit Bowl",
+      "category": "fruit-bowls",
+      "portion": "300 g",
+      "description": "Pineapple, mango, banana and watermelon.",
+      "price": 99,
+      "tag": "",
+      "fruits": [
+        "pineapple",
+        "mango",
+        "banana",
+        "watermelon"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "fruit-seed-bowl",
+      "name": "Fruit & Seed Bowl",
+      "category": "fruit-bowls",
+      "portion": "250 g",
+      "description": "Mixed fruit topped with chia and mixed seeds.",
+      "price": 109,
+      "tag": "",
+      "fruits": [
+        "banana",
+        "apple",
+        "pomegranate",
+        "kiwi"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "mango-fruit-bowl",
+      "name": "Mango Fruit Bowl",
+      "category": "fruit-bowls",
+      "portion": "200 g",
+      "description": "Sweet, ripe mango cubes.",
+      "price": 89,
+      "tag": "",
+      "fruits": [
+        "mango"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "apple-pomegranate-bowl",
+      "name": "Apple Pomegranate Bowl",
+      "category": "fruit-bowls",
+      "portion": "200 g",
+      "description": "Crisp apple with ruby pomegranate pearls.",
+      "price": 99,
+      "tag": "",
+      "fruits": [
+        "apple",
+        "pomegranate"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "banana-smoothie",
+      "name": "Banana Smoothie",
+      "category": "smoothies",
+      "portion": "250 ml",
+      "description": "Creamy banana blended with milk.",
+      "price": 69,
+      "tag": "",
+      "fruits": [
+        "banana"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "banana-oats-smoothie",
+      "name": "Banana Oats Smoothie",
+      "category": "smoothies",
+      "portion": "250 ml",
+      "description": "Banana and oats — a filling start to the day.",
+      "price": 89,
+      "tag": "",
+      "fruits": [
+        "banana"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "mango-smoothie",
+      "name": "Mango Smoothie",
+      "category": "smoothies",
+      "portion": "250 ml",
+      "description": "Thick, ripe mango smoothie.",
+      "price": 99,
+      "tag": "",
+      "fruits": [
+        "mango"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "choco-banana-smoothie",
+      "name": "Choco Banana Smoothie",
+      "category": "smoothies",
+      "portion": "250 ml",
+      "description": "Banana blended with rich cocoa.",
+      "price": 99,
+      "tag": "",
+      "fruits": [
+        "banana"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "strawberry-smoothie",
+      "name": "Strawberry Smoothie",
+      "category": "smoothies",
+      "portion": "250 ml",
+      "description": "Fresh strawberries blended smooth.",
+      "price": 139,
+      "tag": "",
+      "fruits": [
+        "strawberry"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "pineapple-coconut-smoothie",
+      "name": "Pineapple Coconut Smoothie",
+      "category": "smoothies",
+      "portion": "250 ml",
+      "description": "Pineapple with a creamy coconut finish.",
+      "price": 99,
+      "tag": "",
+      "fruits": [
+        "pineapple"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "banana-peanut-butter-smoothie",
+      "name": "Banana Peanut Butter Smoothie",
+      "category": "smoothies",
+      "portion": "250 ml",
+      "description": "Banana and peanut butter — protein-packed.",
+      "price": 109,
+      "tag": "",
+      "fruits": [
+        "banana"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "mango-banana-smoothie",
+      "name": "Mango Banana Smoothie",
+      "category": "smoothies",
+      "portion": "250 ml",
+      "description": "Mango and banana, blended together.",
+      "price": 109,
+      "tag": "",
+      "fruits": [
+        "mango",
+        "banana"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "apple-cinnamon-smoothie",
+      "name": "Apple Cinnamon Smoothie",
+      "category": "smoothies",
+      "portion": "250 ml",
+      "description": "Apple with a warm hint of cinnamon.",
+      "price": 99,
+      "tag": "",
+      "fruits": [
+        "apple"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "dates-banana-smoothie",
+      "name": "Dates & Banana Smoothie",
+      "category": "smoothies",
+      "portion": "250 ml",
+      "description": "Naturally sweetened with dates.",
+      "price": 99,
+      "tag": "",
+      "fruits": [
+        "banana"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "banana-crunch-bowl",
+      "name": "Banana Crunch Bowl",
+      "category": "smoothie-bowls",
+      "portion": "300 g",
+      "description": "Banana smoothie base topped with crunchy granola.",
+      "price": 129,
+      "tag": "",
+      "fruits": [
+        "banana"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "mango-tropical-bowl",
+      "name": "Mango Tropical Bowl",
+      "category": "smoothie-bowls",
+      "portion": "300 g",
+      "description": "Mango smoothie base with tropical fruit.",
+      "price": 149,
+      "tag": "",
+      "fruits": [
+        "mango",
+        "pineapple"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "choco-banana-bowl",
+      "name": "Choco Banana Bowl",
+      "category": "smoothie-bowls",
+      "portion": "300 g",
+      "description": "Cocoa-banana base with banana slices.",
+      "price": 149,
+      "tag": "",
+      "fruits": [
+        "banana"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "peanut-butter-bowl",
+      "name": "Peanut Butter Bowl",
+      "category": "smoothie-bowls",
+      "portion": "300 g",
+      "description": "Peanut butter and banana base, loaded with toppings.",
+      "price": 159,
+      "tag": "",
+      "fruits": [
+        "banana"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "fruit-granola-bowl",
+      "name": "Fruit & Granola Bowl",
+      "category": "smoothie-bowls",
+      "portion": "300 g",
+      "description": "Smoothie base with fresh fruit and granola.",
+      "price": 159,
+      "tag": "Signature",
+      "fruits": [
+        "strawberry",
+        "banana",
+        "kiwi",
+        "blueberry"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "watermelon-juice",
+      "name": "Watermelon Juice",
+      "category": "juices",
+      "portion": "250 ml",
+      "description": "Freshly pressed watermelon.",
+      "price": 35,
+      "tag": "",
+      "fruits": [
+        "watermelon"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "mosambi-juice",
+      "name": "Mosambi Juice",
+      "category": "juices",
+      "portion": "250 ml",
+      "description": "Fresh sweet-lime juice.",
+      "price": 45,
+      "tag": "",
+      "fruits": [
+        "orange"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "pineapple-juice",
+      "name": "Pineapple Juice",
+      "category": "juices",
+      "portion": "250 ml",
+      "description": "Tangy, fresh pineapple juice.",
+      "price": 45,
+      "tag": "",
+      "fruits": [
+        "pineapple"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "orange-juice",
+      "name": "Orange Juice",
+      "category": "juices",
+      "portion": "250 ml",
+      "description": "Freshly squeezed orange.",
+      "price": 55,
+      "tag": "",
+      "fruits": [
+        "orange"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "papaya-smooth-juice",
+      "name": "Papaya Smooth Juice",
+      "category": "juices",
+      "portion": "250 ml",
+      "description": "Smooth papaya juice.",
+      "price": 40,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "carrot-juice",
+      "name": "Carrot Juice",
+      "category": "juices",
+      "portion": "250 ml",
+      "description": "Fresh carrot juice.",
+      "price": 49,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "beetroot-juice",
+      "name": "Beetroot Juice",
+      "category": "juices",
+      "portion": "250 ml",
+      "description": "Earthy, fresh beetroot juice.",
+      "price": 59,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "cucumber-mint-cooler",
+      "name": "Cucumber Mint Cooler",
+      "category": "juices",
+      "portion": "250 ml",
+      "description": "Cucumber and mint — light and refreshing.",
+      "price": 45,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "pomegranate-juice",
+      "name": "Pomegranate Juice",
+      "category": "juices",
+      "portion": "250 ml",
+      "description": "Pure pomegranate juice.",
+      "price": 89,
+      "tag": "",
+      "fruits": [
+        "pomegranate"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "apple-juice",
+      "name": "Apple Juice",
+      "category": "juices",
+      "portion": "250 ml",
+      "description": "Fresh apple juice.",
+      "price": 79,
+      "tag": "",
+      "fruits": [
+        "apple"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "mixed-fruit-juice",
+      "name": "Mixed Fruit Juice",
+      "category": "juices",
+      "portion": "250 ml",
+      "description": "A blend of fresh seasonal fruits.",
+      "price": 69,
+      "tag": "",
+      "fruits": [
+        "orange",
+        "apple",
+        "pineapple"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "garden-crunch-salad",
+      "name": "Garden Crunch Salad",
+      "category": "salads",
+      "portion": "200 g",
+      "description": "Crunchy fresh garden vegetables.",
+      "price": 79,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "chickpea-chaat-salad",
+      "name": "Chickpea Chaat Salad",
+      "category": "salads",
+      "portion": "250 g",
+      "description": "Chickpeas, onion, tomato and chaat spices.",
+      "price": 99,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "paneer-power-salad",
+      "name": "Paneer Power Salad",
+      "category": "salads",
+      "portion": "250 g",
+      "description": "Paneer cubes with fresh vegetables.",
+      "price": 129,
+      "tag": "High protein",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "sweet-corn-salad",
+      "name": "Sweet Corn Salad",
+      "category": "salads",
+      "portion": "220 g",
+      "description": "Sweet corn with veggies and a light dressing.",
+      "price": 89,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "sprouts-veggie-salad",
+      "name": "Sprouts & Veggie Salad",
+      "category": "salads",
+      "portion": "250 g",
+      "description": "Fresh sprouts tossed with vegetables.",
+      "price": 99,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "quinoa-veggie-salad",
+      "name": "Quinoa Veggie Salad",
+      "category": "salads",
+      "portion": "250 g",
+      "description": "Quinoa with colourful vegetables.",
+      "price": 149,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "premium-paneer-salad",
+      "name": "Premium Paneer Salad",
+      "category": "salads",
+      "portion": "300 g",
+      "description": "A bigger paneer salad with premium veggies.",
+      "price": 169,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "cucumber-corn-salad",
+      "name": "Cucumber Corn Salad",
+      "category": "salads",
+      "portion": "220 g",
+      "description": "Cucumber and sweet corn, light and fresh.",
+      "price": 89,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "banana-overnight-oats",
+      "name": "Banana Overnight Oats",
+      "category": "breakfast",
+      "portion": "200 g",
+      "description": "Oats soaked overnight with banana.",
+      "price": 99,
+      "tag": "",
+      "fruits": [
+        "banana"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "chocolate-overnight-oats",
+      "name": "Chocolate Overnight Oats",
+      "category": "breakfast",
+      "portion": "200 g",
+      "description": "Overnight oats with cocoa.",
+      "price": 109,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "fruit-yogurt-parfait",
+      "name": "Fruit & Yogurt Parfait",
+      "category": "breakfast",
+      "portion": "200 g",
+      "description": "Layers of yogurt, fruit and granola.",
+      "price": 109,
+      "tag": "",
+      "fruits": [
+        "strawberry",
+        "banana"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "chia-fruit-pudding",
+      "name": "Chia Fruit Pudding",
+      "category": "breakfast",
+      "portion": "200 g",
+      "description": "Chia pudding topped with fresh fruit.",
+      "price": 99,
+      "tag": "",
+      "fruits": [
+        "mango",
+        "banana"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "chickpea-power-bowl",
+      "name": "Chickpea Power Bowl",
+      "category": "breakfast",
+      "portion": "280 g",
+      "description": "Chickpeas with veggies — filling and high in protein.",
+      "price": 129,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "paneer-veggie-bowl",
+      "name": "Paneer Veggie Bowl",
+      "category": "breakfast",
+      "portion": "280 g",
+      "description": "Paneer with sautéed vegetables.",
+      "price": 149,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "mango-yogurt-parfait",
+      "name": "Mango Yogurt Parfait",
+      "category": "breakfast",
+      "portion": "200 g",
+      "description": "Mango layered with yogurt and granola.",
+      "price": 119,
+      "tag": "",
+      "fruits": [
+        "mango"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "extra-banana",
+      "name": "Extra Banana",
+      "category": "addons",
+      "portion": "30 g",
+      "description": "",
+      "price": 15,
+      "tag": "",
+      "fruits": [
+        "banana"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "extra-apple",
+      "name": "Extra Apple",
+      "category": "addons",
+      "portion": "40 g",
+      "description": "",
+      "price": 20,
+      "tag": "",
+      "fruits": [
+        "apple"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "pomegranate",
+      "name": "Pomegranate",
+      "category": "addons",
+      "portion": "30 g",
+      "description": "",
+      "price": 20,
+      "tag": "",
+      "fruits": [
+        "pomegranate"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "mixed-seeds",
+      "name": "Mixed Seeds",
+      "category": "addons",
+      "portion": "15 g",
+      "description": "",
+      "price": 20,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "chia-seeds",
+      "name": "Chia Seeds",
+      "category": "addons",
+      "portion": "10 g",
+      "description": "",
+      "price": 15,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "granola",
+      "name": "Granola",
+      "category": "addons",
+      "portion": "25 g",
+      "description": "",
+      "price": 20,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "oats",
+      "name": "Oats",
+      "category": "addons",
+      "portion": "20 g",
+      "description": "",
+      "price": 15,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "peanut-butter",
+      "name": "Peanut Butter",
+      "category": "addons",
+      "portion": "15 g",
+      "description": "",
+      "price": 20,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "yogurt-dip",
+      "name": "Yogurt Dip",
+      "category": "addons",
+      "portion": "40 g",
+      "description": "",
+      "price": 15,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "extra-paneer",
+      "name": "Extra Paneer",
+      "category": "addons",
+      "portion": "40 g",
+      "description": "",
+      "price": 25,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "chickpeas",
+      "name": "Chickpeas",
+      "category": "addons",
+      "portion": "50 g",
+      "description": "",
+      "price": 15,
+      "tag": "",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "morning-fresh-combo",
+      "name": "Morning Fresh Combo",
+      "category": "combos",
+      "portion": "Combo",
+      "description": "Small fruit bowl + 250 ml watermelon juice.",
+      "price": 129,
+      "tag": "Combo",
+      "fruits": [
+        "watermelon"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "healthy-lunch-combo",
+      "name": "Healthy Lunch Combo",
+      "category": "combos",
+      "portion": "Combo",
+      "description": "Garden salad + banana smoothie.",
+      "price": 149,
+      "tag": "Combo",
+      "fruits": [
+        "banana"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "breakfast-combo",
+      "name": "Breakfast Combo",
+      "category": "combos",
+      "portion": "Combo",
+      "description": "Banana overnight oats + banana smoothie.",
+      "price": 169,
+      "tag": "Combo",
+      "fruits": [
+        "banana"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "share-enjoy-combo",
+      "name": "Share & Enjoy Combo",
+      "category": "combos",
+      "portion": "Combo",
+      "description": "2 seasonal fruit bowls + 2 banana smoothies.",
+      "price": 249,
+      "tag": "For 2",
+      "fruits": [
+        "apple",
+        "banana",
+        "grapes",
+        "orange"
+      ],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "5-day-fresh-fruit-plan",
+      "name": "5-Day Fresh Fruit Plan",
+      "category": "plans",
+      "portion": "5 days",
+      "description": "5 fruit bowls, one a day.",
+      "price": 349,
+      "tag": "Plan",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "5-day-smoothie-plan",
+      "name": "5-Day Smoothie Plan",
+      "category": "plans",
+      "portion": "5 days",
+      "description": "5 smoothies, one a day.",
+      "price": 449,
+      "tag": "Plan",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "5-day-salad-plan",
+      "name": "5-Day Salad Plan",
+      "category": "plans",
+      "portion": "5 days",
+      "description": "5 salads, one a day.",
+      "price": 549,
+      "tag": "Plan",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    },
+    {
+      "id": "5-day-mixed-healthy-plan",
+      "name": "5-Day Mixed Healthy Plan",
+      "category": "plans",
+      "portion": "5 days",
+      "description": "5 mixed healthy items, one a day.",
+      "price": 599,
+      "tag": "Plan",
+      "fruits": [],
+      "available": true,
+      "image": ""
+    }
   ],
   "custom": {
     "basePrice": 99,
     "fruits": [
-      { "id": "banana", "name": "Banana", "price": 20 },
-      { "id": "strawberry", "name": "Strawberry", "price": 40 },
-      { "id": "blueberry", "name": "Blueberry", "price": 50 },
-      { "id": "kiwi", "name": "Kiwi", "price": 35 },
-      { "id": "mango", "name": "Mango", "price": 35 },
-      { "id": "apple", "name": "Apple", "price": 25 },
-      { "id": "orange", "name": "Orange", "price": 25 },
-      { "id": "grapes", "name": "Grapes", "price": 30 },
-      { "id": "pomegranate", "name": "Pomegranate", "price": 40 },
-      { "id": "pineapple", "name": "Pineapple", "price": 30 },
-      { "id": "watermelon", "name": "Watermelon", "price": 20 }
+      {
+        "id": "banana",
+        "name": "Banana",
+        "price": 15
+      },
+      {
+        "id": "strawberry",
+        "name": "Strawberry",
+        "price": 40
+      },
+      {
+        "id": "blueberry",
+        "name": "Blueberry",
+        "price": 50
+      },
+      {
+        "id": "kiwi",
+        "name": "Kiwi",
+        "price": 35
+      },
+      {
+        "id": "mango",
+        "name": "Mango",
+        "price": 35
+      },
+      {
+        "id": "apple",
+        "name": "Apple",
+        "price": 20
+      },
+      {
+        "id": "orange",
+        "name": "Orange",
+        "price": 25
+      },
+      {
+        "id": "grapes",
+        "name": "Grapes",
+        "price": 30
+      },
+      {
+        "id": "pomegranate",
+        "name": "Pomegranate",
+        "price": 20
+      },
+      {
+        "id": "pineapple",
+        "name": "Pineapple",
+        "price": 30
+      },
+      {
+        "id": "watermelon",
+        "name": "Watermelon",
+        "price": 20
+      }
     ],
     "toppings": [
-      { "id": "honey", "name": "Honey drizzle", "price": 15 },
-      { "id": "granola", "name": "Granola", "price": 25 },
-      { "id": "chia", "name": "Chia seeds", "price": 20 },
-      { "id": "yogurt", "name": "Greek yogurt", "price": 35 },
-      { "id": "coconut", "name": "Coconut flakes", "price": 15 },
-      { "id": "nuts", "name": "Mixed nuts", "price": 30 }
+      {
+        "id": "honey",
+        "name": "Honey drizzle",
+        "price": 15
+      },
+      {
+        "id": "granola",
+        "name": "Granola",
+        "price": 20
+      },
+      {
+        "id": "chia",
+        "name": "Chia seeds",
+        "price": 15
+      },
+      {
+        "id": "yogurt",
+        "name": "Yogurt dip",
+        "price": 15
+      },
+      {
+        "id": "coconut",
+        "name": "Coconut flakes",
+        "price": 15
+      },
+      {
+        "id": "nuts",
+        "name": "Mixed seeds",
+        "price": 20
+      }
     ]
   }
 }
