@@ -43,13 +43,13 @@ Back up the `data/` folder regularly. You can also download orders as **CSV** (o
 - Orders: filter by status / delivery day, search, click for full details; one-click status changes (pending → preparing → out for delivery → delivered / cancelled), internal notes, call/WhatsApp/map links, print slip, delete
 - Auto-refresh every 15 s with a sound + toast when a new order arrives
 - Customers list with order count and total spend
-- Menu editor: category, portion, price, description, tag, photo and in-stock for every item; filter by category or search; add/remove items; build-your-own prices, delivery fee, currency
+- Menu editor: category, portion, price, description, "what's inside", tag and in-stock for every item; filter by category or search; add/remove items; build-your-own prices, delivery fee, currency
 
 **Safety built in:** prices are always recalculated on the server (customers can't tamper with totals), input validation, rate limiting on orders/login/tracking, atomic file writes, path-traversal protection.
 
 ## Customising
 
-- **Business name:** search for `Navrasa` in `public/*.html`; the cup label image is `public/img/navrasa-label.png`.
+- **Business name:** search for `Navrasa` in `public/*.html`.
 - **Currency, prices, bowls:** admin panel → *Menu & prices* (or edit `data/menu.json`).
 - **Delivery slots / payment methods:** `SLOTS` and `PAYMENTS` at the top of `server.js`.
 - **Colours & fonts:** CSS variables at the top of `public/css/styles.css`.
@@ -63,7 +63,6 @@ Orders are stored as **files** in a private Vercel Blob store (Vercel's own disk
 | `navrasa/orders.json` | The order database — every order, read and updated on each change |
 | `navrasa/orders.md` | Human-readable log of all orders, rewritten after every change |
 | `navrasa/menu.json` | Menu and prices (edited from the admin panel) |
-| `navrasa/images/…` | Bowl photos uploaded in the admin panel |
 
 Writes are conditional on the file's version (ETag), so simultaneous orders never overwrite each other.
 You can browse and download these files in Vercel → **Storage → your Blob store → Browser**, or from the admin panel (**⬇ orders.md**, **⬇ Orders CSV**).
@@ -83,7 +82,6 @@ Any host that runs Node and keeps files on disk works (a VPS, Railway/Render wit
 
 
 
-Uploaded menu photos are stored in `data/uploads/`; back them up with the rest of `data/`.
 
 ## Changing the menu file
 
