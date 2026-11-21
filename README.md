@@ -1,6 +1,5 @@
-# Navrasa — Fresh Bowls & More (3D shop)
+# Navrasa — Fresh Bowls & More
 
-A complete fruit-bowl ordering website with an interactive 3D storefront, real checkout, order tracking, and a private admin dashboard. **No dependencies** — just Node.js 18+.
 
 ## Run it
 
@@ -32,12 +31,8 @@ Back up the `data/` folder regularly. You can also download orders as **CSV** (o
 ## Features
 
 **Customer site**
-- Photographic 3D hero: your real Navrasa product photo, wrapped onto a depth model of the cup so it turns and tilts in 3D (drag to turn) at full photo quality (`public/img/hero-cup.webp` + `public/img/hero-depth.png`)
-- Build-your-own uses a live 3D cup so customers see their picked fruit and toppings land in it
-- **Real photos on menu cards:** Admin → Menu & prices → *Upload photo* on any bowl. Cards without a photo show a 3D render of that bowl's fruit
-- Menu card photos are rendered from the same 3D models, so they always match each bowl's fruit list
+- Simple, text-first design (no images or animations)
 - Full Navrasa menu: 67 items in 9 categories (fruit bowls, smoothies, smoothie bowls, juices, salads, breakfast, add-ons, combos, 5-day plans) with portions and prices, category tabs, sold-out handling
-- **Build-your-own bowl in 3D** — pick 2–8 fruits and they drop into the bowl live; toppings; live price
 - Cart (saved in the browser), free-delivery threshold, quantity controls
 - Checkout: name, phone, email, address, delivery date (up to 14 days) + 2-hour slot, payment on delivery (cash/UPI/card), notes
 - Order confirmation with an order ID, and a tracking page with a live status timeline
@@ -85,11 +80,8 @@ Setup:
 
 Any host that runs Node and keeps files on disk works (a VPS, Railway/Render with a persistent disk, etc.). Put it behind HTTPS (e.g. Caddy or Nginx). Serverless hosts with read-only/ephemeral filesystems will lose `data/` — use a persistent volume there.
 
-Three.js (MIT) is bundled in `public/vendor/three`, so the site needs no CDN.
 
-## Changing the hero photo
 
-`tools/make-hero-3d.py` (Python + Pillow + NumPy) rebuilds the hero cut-out and depth map from `tools/source-photo.webp`. Its cup-outline numbers are tuned to the current photo, so a new photo with different framing needs them adjusted.
 
 Uploaded menu photos are stored in `data/uploads/`; back them up with the rest of `data/`.
 

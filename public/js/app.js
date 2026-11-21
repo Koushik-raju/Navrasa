@@ -1,5 +1,3 @@
-import { webglAvailable, FRUIT_COLORS } from './colors.js';
-import { artFor } from './menu-art.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -37,11 +35,6 @@ function totals() {
   const delivery = subtotal === 0 || subtotal >= MENU.freeDeliveryAbove ? 0 : MENU.deliveryFee;
   return { subtotal, delivery, total: subtotal + delivery };
 }
-function swatch(fruits) {
-  const cols = (fruits || []).slice(0, 4).map(f => FRUIT_COLORS[f] || '#ccc');
-  if (!cols.length) cols.push('#eee');
-  return `conic-gradient(${cols.map((c, i) => `${c} ${(i / cols.length) * 100}% ${((i + 1) / cols.length) * 100}%`).join(',')})`;
-}
 
 function addToCart(entry) {
   const key = entry.type === 'custom' ? 'custom:' + [...entry.fruits].sort().join('+') + '|' + [...entry.toppings].sort().join('+') : 'bowl:' + entry.id;
@@ -49,7 +42,6 @@ function addToCart(entry) {
   if (existing) existing.qty = Math.min(20, existing.qty + entry.qty);
   else cart.push({ ...entry, key });
   saveCart(); renderCart();
-  const b = $('#cartBtn'); b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump');
 }
 
 function renderCart() {
@@ -62,7 +54,6 @@ function renderCart() {
     box.innerHTML = cart.map((it, idx) => {
       const i = itemInfo(it);
       return `<div class="cart-item">
-        <div class="sw" style="background:${swatch(i.fruits)}"></div>
         <div><h5>${esc(i.name)}</h5>${i.details ? `<div class="det">${esc(i.details)}</div>` : ''}<div class="det">${fmt(i.unit)} each</div></div>
         <div class="r"><b>${fmt(i.unit * it.qty)}</b>
           <div class="qty"><button data-i="${idx}" data-d="-1" aria-label="Fewer">−</button><span>${it.qty}</span><button data-i="${idx}" data-d="1" aria-label="More">+</button></div>
@@ -103,55 +94,28 @@ addEventListener('scroll', onScroll, { passive: true }); onScroll();
 $('#year').textContent = new Date().getFullYear();
 
 // ---------------- menu ----------------
-function bowlArt(b) { // (legacy, unused)
-  const dots = [];
-  const n = 13;
-  for (let i = 0; i < n; i++) {
-    const f = b.fruits[i % b.fruits.length];
-    const size = 22 + ((i * 7) % 14);
-    const x = 50 + Math.cos(i * 2.39) * (8 + (i % 4) * 7.5);
-    const y = 40 + Math.sin(i * 2.39) * (3 + (i % 4) * 2.2) - (i % 3) * 3;
-    dots.push(`<span class="dot" style="width:${size}px;height:${size}px;left:calc(${x}% - ${size / 2}px);top:calc(${y}% - ${size / 2}px);background:${FRUIT_COLORS[f] || '#ccc'};z-index:${Math.round(y)}"></span>`);
-  }
-  return dots.join('');
-}
-let thumbs = {};
-const thumbKey = b => b.id + ':' + b.fruits.join(',');
-const CAT_STYLE = {
-  'fruit-bowls': ['#ffe1d6', '#ffd0a8'], 'smoothies': ['#ffe7c2', '#ffd6e0'], 'smoothie-bowls': ['#f3dcff', '#ffd6e0'],
-  'juices': ['#fff1b8', '#ffd59e'], 'salads': ['#dff5d0', '#c9ecb6'], 'breakfast': ['#f6ead8', '#ffe2bf'],
-  'addons': ['#eef2e6', '#e3ead4'], 'combos': ['#ffe0d1', '#ffcfb8'], 'plans': ['#dcefe3', '#cfe6f4'],
-};
-const PHOTO_CATS = new Set(['fruit-bowls', 'smoothie-bowls']); // these show the Navrasa cup photo until a real photo is uploaded
 let activeCat = 'all';
 function cardHtml(b, cat) {
-  const [c1, c2] = CAT_STYLE[b.category] || ['#fff3e3', '#ffe2bf'];
-  // a real uploaded photo wins; otherwise the item's own illustration
-  const art = b.image
-    ? `<img class="bowl-photo" src="${esc(b.image)}" alt="${esc(b.name)}" loading="lazy" decoding="async" />`
-    : artFor(b);
   const inc = Array.isArray(b.includes) ? b.includes : [];
   const incHtml = inc.length ? `<details class="incl"><summary>What's inside <span class="chev" aria-hidden="true">▾</span></summary>
       <ul>${inc.map(t => `<li>${esc(t)}</li>`).join('')}</ul></details>` : '';
   if (b.category === 'addons') {
     return `<article class="addon-card" data-id="${esc(b.id)}">
-      <div class="addon-art">${b.image ? `<img src="${esc(b.image)}" alt="" loading="lazy" />` : artFor(b)}</div>
       <div><h4>${esc(b.name)}</h4><span class="portion">${esc(b.portion)}</span></div>
       <span class="price">${fmt(b.price)}</span>
       <button class="btn btn-primary add-btn sm" data-add="${esc(b.id)}" ${b.available ? '' : 'disabled'} aria-label="Add ${esc(b.name)}">${b.available ? '+' : 'Sold out'}</button>
     </article>`;
   }
   return `<article class="bowl-card" data-id="${esc(b.id)}">
-    <div class="bowl-art" style="background:linear-gradient(135deg, ${c1}, ${c2})">
-      ${b.tag ? `<span class="tag">${esc(b.tag)}</span>` : ''}
-      ${art}
-      ${b.available ? '' : '<div class="soldout">SOLD OUT</div>'}
+    <div class="card-top">
+      <span class="portion">${esc(b.portion || '')}</span>
+      ${b.available ? (b.tag ? `<span class="tag">${esc(b.tag)}</span>` : '') : '<span class="tag soldout">Sold out</span>'}
     </div>
     <h3>${esc(b.name)}</h3>
     ${b.description ? `<p>${esc(b.description)}</p>` : '<p></p>'}
     ${incHtml}
     <div class="bowl-meta">
-      <span class="price">${fmt(b.price)}<span class="kcal">${esc(b.portion || '')}</span></span>
+      <span class="price">${fmt(b.price)}</span>
       <button class="btn btn-primary add-btn" data-add="${esc(b.id)}" ${b.available ? '' : 'disabled'}>Add +</button>
     </div>
   </article>`;
@@ -162,10 +126,10 @@ function renderMenu() {
     .filter(c => c.items.length);
   if (activeCat !== 'all' && !cats.some(c => c.id === activeCat)) activeCat = 'all';
   $('#menuTabs').innerHTML = [`<button data-cat="all" class="${activeCat === 'all' ? 'on' : ''}">All <b>${MENU.bowls.length}</b></button>`]
-    .concat(cats.map(c => `<button data-cat="${esc(c.id)}" class="${activeCat === c.id ? 'on' : ''}">${esc(c.icon || '')} ${esc(c.name)} <b>${c.items.length}</b></button>`)).join('');
+    .concat(cats.map(c => `<button data-cat="${esc(c.id)}" class="${activeCat === c.id ? 'on' : ''}">${esc(c.name)} <b>${c.items.length}</b></button>`)).join('');
   $('#menuGrid').innerHTML = cats.filter(c => activeCat === 'all' || c.id === activeCat).map(c => `
     <section class="menu-cat" id="cat-${esc(c.id)}">
-      <h3 class="cat-title"><span>${esc(c.icon || '')}</span> ${esc(c.name)} <small>${c.items.length} item${c.items.length > 1 ? 's' : ''}</small></h3>
+      <h3 class="cat-title">${esc(c.name)} <small>${c.items.length} item${c.items.length > 1 ? 's' : ''}</small></h3>
       <div class="${c.id === 'addons' ? 'addon-grid' : 'cat-grid'}">${c.items.map(b => cardHtml(b, c)).join('')}</div>
     </section>`).join('');
 }
@@ -180,27 +144,15 @@ $('#menuGrid').addEventListener('click', e => {
   addToCart({ type: 'bowl', id: b.id, qty: 1 });
   toast(`${b.name} added to cart`);
 });
-// 3D tilt on cards
-$('#menuGrid').addEventListener('pointermove', e => {
-  const card = e.target.closest('.bowl-card'); if (!card || e.pointerType !== 'mouse') return;
-  const r = card.getBoundingClientRect();
-  const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
-  card.style.transform = `perspective(900px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg) translateY(-6px)`;
-});
-$('#menuGrid').addEventListener('pointerout', e => {
-  const card = e.target.closest('.bowl-card');
-  if (card && !card.contains(e.relatedTarget)) card.style.transform = '';
-});
 
 // ---------------- builder ----------------
 const builder = { fruits: [], toppings: [], qty: 1 };
-let builderScene = null;
 
 function renderBuilder() {
   $('#fruitChips').innerHTML = MENU.custom.fruits.map(f => {
     const on = builder.fruits.includes(f.id);
     const dis = !on && builder.fruits.length >= 8;
-    return `<button type="button" class="chip ${on ? 'on' : ''}" data-fruit="${f.id}" ${dis ? 'disabled' : ''} aria-pressed="${on}"><i style="background:${FRUIT_COLORS[f.id]}"></i>${esc(f.name)} <small>+${fmt(f.price)}</small></button>`;
+    return `<button type="button" class="chip ${on ? 'on' : ''}" data-fruit="${f.id}" ${dis ? 'disabled' : ''} aria-pressed="${on}">${esc(f.name)} <small>+${fmt(f.price)}</small></button>`;
   }).join('');
   $('#toppingChips').innerHTML = MENU.custom.toppings.map(t => {
     const on = builder.toppings.includes(t.id);
@@ -214,8 +166,6 @@ function renderBuilder() {
   const add = $('#addCustom');
   add.disabled = !ok;
   add.textContent = ok ? `Add custom bowl · ${fmt(unit * builder.qty)}` : builder.fruits.length === 1 ? 'Pick at least one more fruit' : 'Pick at least 2 fruits';
-  $('#builderEmpty').classList.toggle('hide', builder.fruits.length > 0);
-  builderScene?.setBowl(builder.fruits, builder.toppings);
 }
 $('#fruitChips').addEventListener('click', e => {
   const c = e.target.closest('[data-fruit]'); if (!c) return;
@@ -322,28 +272,6 @@ $('#checkoutForm').addEventListener('submit', async e => {
   }
 });
 
-// ---------------- 3D scenes ----------------
-async function init3D() {
-  if (!webglAvailable()) { document.body.classList.add('no-webgl'); return; }
-  try {
-    const { initPhotoHero } = await import('./photo-hero.js');
-    initPhotoHero($('#heroCanvas'));
-    // the 3D bowl builder is heavier — only build it when the customer scrolls near it
-    const startBuilder = async () => {
-      if (builderScene) return;
-      const { initBuilder } = await import('./scenes.js');
-      builderScene = initBuilder($('#builderCanvas'));
-      builderScene.setBowl(builder.fruits, builder.toppings);
-    };
-    const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); startBuilder().catch(e => console.error('3D builder failed:', e)); } }, { rootMargin: '600px' });
-    io.observe($('#builderCanvas'));
-    // menu cards use real photos (uploaded per bowl in admin, else the Navrasa product photo)
-  } catch (e) {
-    console.error('3D failed to start:', e);
-    document.body.classList.add('no-webgl');
-  }
-}
-
 // ---------------- boot ----------------
 async function loadMenu() {
   try {
@@ -354,4 +282,4 @@ async function loadMenu() {
     $('#menuGrid').innerHTML = '<p class="muted">Could not load the menu. Please refresh.</p>';
   }
 }
-loadMenu().then(init3D);
+loadMenu();

@@ -293,3 +293,69 @@ legend { padding: 0; margin-bottom: .4rem; }
   border-radius: 0 0 12px 12px; box-shadow: 0 16px 28px -14px rgba(60,35,10,.35); padding-top: .2em; animation: incl-in .18s ease; }
 @keyframes incl-in { from { opacity: 0; transform: translateY(-4px); } }
 .bowl-card:has(.incl[open]) { position: relative; z-index: 4; }
+
+/* =====================================================================
+   SIMPLE & CALM — no images, no 3D, no decorative motion
+   ===================================================================== */
+*, *::before, *::after { animation: none !important; }
+html { scroll-behavior: auto; }
+body { background: #fbf8f2; }
+
+/* hero: one calm column */
+.hero.simple { min-height: auto; display: block; padding: 150px clamp(16px, 5vw, 72px) 70px; background: none; text-align: center; }
+.hero.simple .hero-copy { max-width: 760px; margin: 0 auto; }
+.hero.simple h1 { font-size: clamp(2.6rem, 6vw, 4.6rem); }
+.hero.simple .lead { margin: 0 auto; max-width: 46ch; }
+.hero.simple .hero-cta, .hero.simple .hero-stats { justify-content: center; }
+.hero.simple .hero-stats { border-top: 1px solid var(--line); padding-top: 1.6rem; margin-top: 2.4rem; gap: clamp(1.5rem, 6vw, 4rem); }
+.pill { background: transparent; }
+.btn-primary { box-shadow: none; }
+.btn:active { transform: none; }
+
+/* menu */
+.section { padding-top: 70px; padding-bottom: 70px; }
+.menu-tabs { background: #fbf8f2; }
+.menu-tabs button { border-width: 1px; font-weight: 500; }
+.cat-title { font-size: 1.45rem; padding-bottom: .7rem; border-bottom: 1px solid var(--line); }
+.cat-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+.bowl-card { box-shadow: none; border: 1px solid var(--line); border-radius: 16px; padding: 1.2rem 1.25rem 1.1rem; transform: none !important; transition: border-color .2s; }
+.bowl-card:hover { box-shadow: none; border-color: #d6cbb8; }
+.card-top { display: flex; justify-content: space-between; align-items: center; min-height: 22px; margin-bottom: .55rem; }
+.card-top .portion { font-size: .78rem; color: var(--ink-2); letter-spacing: .04em; text-transform: uppercase; }
+.card-top .tag { position: static; font-size: .72rem; font-weight: 700; color: var(--green); background: #eef4ea; border-radius: 999px; padding: .2em .7em; }
+.card-top .tag.soldout { color: var(--coral-2); background: #fde9e4; inset: auto; display: inline; place-items: unset; }
+.bowl-card h3 { font-size: 1.18rem; margin-bottom: .3rem; }
+.bowl-card p { font-size: .9rem; margin-bottom: .9rem; }
+.bowl-card .price { font-size: 1.3rem; }
+.add-btn { padding: .6em 1.1em; }
+.incl { background: transparent; border-width: 1px; }
+.incl ul { background: #fff; border-width: 1px; box-shadow: 0 12px 24px -16px rgba(40,30,20,.25); }
+.addon-card { grid-template-columns: 1fr auto auto; box-shadow: none; border: 1px solid var(--line); padding: .7rem 1rem; }
+
+/* build your own: just the picker */
+.builder { background: none; }
+.builder-wrap.simple { display: block; max-width: 760px; }
+.builder-panel { box-shadow: none; border: 1px solid var(--line); }
+.chip { border-width: 1px; }
+
+/* how it works & footer band */
+.step { box-shadow: none; border: 1px solid var(--line); }
+.step b { background: #eef4ea; color: var(--green); }
+.cta-band { border-radius: 24px; }
+
+/* cart */
+.cart-item { grid-template-columns: 1fr auto; }
+.drawer.open { box-shadow: -10px 0 30px rgba(0,0,0,.08); }
+
+@media (max-width: 960px) { .hero.simple { padding-top: 120px; } }
+@media (max-width: 560px) {
+  .cat-grid { grid-template-columns: 1fr; }
+  .cat-grid .bowl-card p { display: block; }
+  .cat-grid .bowl-meta { flex-direction: row; align-items: center; }
+  .hero.simple .hero-stats { gap: 1.2rem; }
+}
+/* "What's inside" opens inside its own card (never covers the Add button); only that card grows */
+.cat-grid { align-items: start; }
+.incl ul { position: static; border: 0; border-top: 1px solid var(--line); border-radius: 0; box-shadow: none; background: transparent; padding-top: .5em; }
+.incl[open] { border-radius: 12px; }
+.bowl-card:has(.incl[open]) { z-index: auto; }

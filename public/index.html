@@ -4,18 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Navrasa — Fresh Bowls &amp; More</title>
-  <meta name="description" content="Hand-cut fresh fruit bowls, made every morning and delivered to your door. Order a signature bowl or build your own." />
+  <meta name="description" content="Navrasa — fresh fruit bowls, smoothies, juices, salads and breakfast, made every morning and delivered to your door." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&family=DM+Sans:wght@400;500;700&family=Pacifico&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/styles.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍓</text></svg>" />
-  <script type="importmap">
-    { "imports": {
-        "three": "/vendor/three/three.module.js",
-        "three/addons/": "/vendor/three/addons/"
-    } }
-  </script>
 </head>
 <body>
   <header class="nav" id="nav">
@@ -34,11 +28,11 @@
 
   <main id="top">
     <!-- HERO -->
-    <section class="hero">
+    <section class="hero simple">
       <div class="hero-copy">
         <span class="pill">Navrasa · Fresh Bowls &amp; More</span>
         <h1>Fruit bowls that <em>taste like sunshine.</em></h1>
-        <p class="lead">Hand-cut seasonal fruit, no added sugar, packed within an hour of delivery. Pick a signature bowl or build your own in 3D.</p>
+        <p class="lead">Hand-cut seasonal fruit, fresh juices, smoothies and salads — made every morning, delivered to your door.</p>
         <div class="hero-cta">
           <a href="#menu" class="btn btn-primary">Order now</a>
           <a href="#build" class="btn btn-ghost">Build your bowl →</a>
@@ -49,18 +43,8 @@
           <li><b>2-hr</b><span>delivery slots</span></li>
         </ul>
       </div>
-      <div class="hero-stage">
-        <canvas id="heroCanvas" aria-label="3D fruit bowl"></canvas>
-        <div class="stage-fallback" id="heroFallback"><img src="/img/hero-cup.webp" alt="Navrasa fresh fruit bowl" style="max-width:100%;max-height:100%;object-fit:contain" /></div>
-        <span class="drag-hint">drag to turn</span>
-      </div>
     </section>
 
-    <!-- MARQUEE -->
-    <div class="marquee" aria-hidden="true"><div>
-      🍓 Strawberry · 🥝 Kiwi · 🥭 Mango · 🍍 Pineapple · 🍌 Banana · 🫐 Blueberry · 🍇 Grapes · 🍊 Orange · 🍎 Apple · 🍉 Watermelon · 🍒 Pomegranate ·
-      🍓 Strawberry · 🥝 Kiwi · 🥭 Mango · 🍍 Pineapple · 🍌 Banana · 🫐 Blueberry · 🍇 Grapes · 🍊 Orange · 🍎 Apple · 🍉 Watermelon · 🍒 Pomegranate ·
-    </div></div>
 
     <!-- MENU -->
     <section class="section" id="menu">
@@ -78,14 +62,9 @@
       <div class="section-head">
         <span class="eyebrow">Your bowl, your rules</span>
         <h2>Build your own</h2>
-        <p>Pick 2–8 fruits and watch them land in your bowl.</p>
+        <p>Pick 2–8 fruits and any toppings you like.</p>
       </div>
-      <div class="builder-wrap">
-        <div class="builder-stage">
-          <canvas id="builderCanvas" aria-label="3D custom bowl preview"></canvas>
-          <div class="stage-fallback" id="builderFallback">🥣</div>
-          <div class="builder-empty" id="builderEmpty">Tap a fruit to start →</div>
-        </div>
+      <div class="builder-wrap simple">
         <div class="builder-panel">
           <h3>Fruits <small id="fruitCount">0 / 8</small></h3>
           <div class="chips" id="fruitChips"></div>

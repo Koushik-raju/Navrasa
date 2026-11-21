@@ -453,11 +453,6 @@
     const cats = menu.categories || [];
     $('#bowlEditor').innerHTML = menu.bowls.map((b, i) => `
       <div class="bowl-row" data-i="${i}" data-image="${esc(b.image || '')}">
-        <div class="photo-cell">
-          <div class="photo-thumb">${b.image ? `<img src="${esc(b.image)}" alt="" />` : '<span>No photo</span>'}</div>
-          <label class="btn sm upl">📷 ${b.image ? 'Change' : 'Upload'} photo<input type="file" accept="image/jpeg,image/png,image/webp" data-upload hidden /></label>
-          ${b.image ? '<button type="button" class="link" data-rmphoto>Remove</button>' : ''}
-        </div>
         <label>Name<input data-k="name" value="${esc(b.name)}" maxlength="60" /></label>
         <label>Category<select data-k="category">${cats.map(c => `<option value="${esc(c.id)}" ${c.id === b.category ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></label>
         <label>Portion<input data-k="portion" value="${esc(b.portion || '')}" maxlength="30" placeholder="e.g. 250 ml" /></label>
