@@ -1393,5 +1393,15 @@
         "price": 20
       }
     ]
+  },
+  "shop": {
+    "whatsapp": "",
+    "whatsappGroup": "",
+    "phone": "",
+    "upiId": "koushik9742608054@okaxis",
+    "upiName": "Bored Time",
+    "upiQr": "/img/upi-qr.png",
+    "hours": "",
+    "area": ""
   }
 }
