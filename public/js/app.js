@@ -95,18 +95,30 @@ $('#year').textContent = new Date().getFullYear();
 
 // ---------------- menu ----------------
 let activeCat = 'all';
+const FRUIT_HUE = { banana: '#f4c430', strawberry: '#e8344a', blueberry: '#4a5bd4', kiwi: '#6aae2a', mango: '#ffa41b', apple: '#d7263d',
+  orange: '#ff8a1c', grapes: '#8e3fa3', pomegranate: '#c0102c', pineapple: '#e9b400', watermelon: '#f2455a' };
+// gentle fade-in as things scroll into view
+const revealer = 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches
+  ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); revealer.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' })
+  : null;
+function reveal(root = document) {
+  root.querySelectorAll('.reveal:not(.in)').forEach((el, i) => {
+    if (!revealer) { el.classList.add('in'); return; }
+    el.style.transitionDelay = `${Math.min(i % 4, 3) * 60}ms`; revealer.observe(el);
+  });
+}
 function cardHtml(b, cat) {
   const inc = Array.isArray(b.includes) ? b.includes : [];
   const incHtml = inc.length ? `<details class="incl"><summary>What's inside <span class="chev" aria-hidden="true">▾</span></summary>
       <ul>${inc.map(t => `<li>${esc(t)}</li>`).join('')}</ul></details>` : '';
   if (b.category === 'addons') {
-    return `<article class="addon-card" data-id="${esc(b.id)}">
+    return `<article class="addon-card reveal" data-cat="${esc(b.category)}" data-id="${esc(b.id)}">
       <div><h4>${esc(b.name)}</h4><span class="portion">${esc(b.portion)}</span></div>
       <span class="price">${fmt(b.price)}</span>
       <button class="btn btn-primary add-btn sm" data-add="${esc(b.id)}" ${b.available ? '' : 'disabled'} aria-label="Add ${esc(b.name)}">${b.available ? '+' : 'Sold out'}</button>
     </article>`;
   }
-  return `<article class="bowl-card" data-id="${esc(b.id)}">
+  return `<article class="bowl-card reveal" data-cat="${esc(b.category)}" data-id="${esc(b.id)}">
     <div class="card-top">
       <span class="portion">${esc(b.portion || '')}</span>
       ${b.available ? (b.tag ? `<span class="tag">${esc(b.tag)}</span>` : '') : '<span class="tag soldout">Sold out</span>'}
@@ -126,12 +138,13 @@ function renderMenu() {
     .filter(c => c.items.length);
   if (activeCat !== 'all' && !cats.some(c => c.id === activeCat)) activeCat = 'all';
   $('#menuTabs').innerHTML = [`<button data-cat="all" class="${activeCat === 'all' ? 'on' : ''}">All <b>${MENU.bowls.length}</b></button>`]
-    .concat(cats.map(c => `<button data-cat="${esc(c.id)}" class="${activeCat === c.id ? 'on' : ''}">${esc(c.name)} <b>${c.items.length}</b></button>`)).join('');
+    .concat(cats.map(c => `<button data-cat="${esc(c.id)}" class="${activeCat === c.id ? 'on' : ''}"><i class="dot"></i>${esc(c.name)} <b>${c.items.length}</b></button>`)).join('');
   $('#menuGrid').innerHTML = cats.filter(c => activeCat === 'all' || c.id === activeCat).map(c => `
-    <section class="menu-cat" id="cat-${esc(c.id)}">
+    <section class="menu-cat" data-cat="${esc(c.id)}" id="cat-${esc(c.id)}">
       <h3 class="cat-title">${esc(c.name)} <small>${c.items.length} item${c.items.length > 1 ? 's' : ''}</small></h3>
       <div class="${c.id === 'addons' ? 'addon-grid' : 'cat-grid'}">${c.items.map(b => cardHtml(b, c)).join('')}</div>
     </section>`).join('');
+  reveal($('#menuGrid'));
 }
 $('#menuTabs').addEventListener('click', e => {
   const t = e.target.closest('[data-cat]'); if (!t) return;
@@ -152,7 +165,7 @@ function renderBuilder() {
   $('#fruitChips').innerHTML = MENU.custom.fruits.map(f => {
     const on = builder.fruits.includes(f.id);
     const dis = !on && builder.fruits.length >= 8;
-    return `<button type="button" class="chip ${on ? 'on' : ''}" data-fruit="${f.id}" ${dis ? 'disabled' : ''} aria-pressed="${on}">${esc(f.name)} <small>+${fmt(f.price)}</small></button>`;
+    return `<button type="button" class="chip ${on ? 'on' : ''}" data-fruit="${f.id}" style="--c:${FRUIT_HUE[f.id] || '#ff6b4a'}" ${dis ? 'disabled' : ''} aria-pressed="${on}"><i class="dot"></i>${esc(f.name)} <small>+${fmt(f.price)}</small></button>`;
   }).join('');
   $('#toppingChips').innerHTML = MENU.custom.toppings.map(t => {
     const on = builder.toppings.includes(t.id);
@@ -324,3 +337,4 @@ async function loadMenu() {
   }
 }
 loadMenu();
+reveal();
