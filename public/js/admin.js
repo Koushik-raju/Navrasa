@@ -5,6 +5,8 @@
   let CUR = '₹';
   const fmt = n => CUR + Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 2 });
   const STATUSES = ['pending', 'preparing', 'out-for-delivery', 'delivered', 'cancelled'];
+  const PAY_LABEL = { 'upi-now': 'scanner (UPI)', cash: 'cash', 'upi-on-delivery': 'UPI on delivery', 'card-on-delivery': 'card on delivery' };
+  const payLabel = p => PAY_LABEL[p] || String(p || '').replace(/-/g, ' ');
   const label = s => s.replace(/-/g, ' ');
   const dt = iso => new Date(iso).toLocaleString(undefined, { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
   const dLabel = d => new Date(d + 'T00:00').toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
@@ -169,7 +171,8 @@
       <td>${esc(o.customer.name)}<small>${esc(o.customer.phone)}</small></td>
       <td>${dLabel(o.delivery.date)}<small>${o.delivery.slot}</small></td>
       <td>${n} item${n > 1 ? 's' : ''}<small>${esc(o.items.map(i => i.name).join(', ').slice(0, 40))}</small></td>
-      <td class="r"><b>${fmt(o.total)}</b><small>${esc(o.payment.replace(/-/g, ' '))}</small></td>
+      <td class="r"><b>${fmt(o.total)}</b><small>${esc(payLabel(o.payment))}</small>
+        <button type="button" class="paid-badge ${o.paid ? 'yes' : ''}" data-paid="${o.id}" title="${o.paid ? 'Paid — click to mark unpaid' : 'Not paid yet — click when the money arrives'}">${o.paid ? 'Paid ✓' : 'Unpaid'}</button></td>
       <td>${controls
         ? `<select class="st-select st ${o.status}" data-status-for="${o.id}" aria-label="Change status of ${o.id}">${STATUSES.map(s => `<option value="${s}" ${s === o.status ? 'selected' : ''}>${label(s)}</option>`).join('')}</select>`
         : `<span class="st ${o.status}">${label(o.status)}</span>`}</td>
@@ -191,6 +194,14 @@
       <button class="step-btn" data-step="${o.id}" data-to="${p || ''}" ${p ? '' : 'disabled'} title="${p ? 'Back to ' + label(p) : 'No previous status'}">◀</button>
       <button class="step-btn next" data-step="${o.id}" data-to="${n || ''}" ${n ? '' : 'disabled'} title="${n ? 'Move to ' + label(n) : 'Already ' + label(o.status)}">${n ? label(n) + ' ▶' : '✓ ' + label(o.status)}</button>
     </span>`;
+  }
+  async function togglePaid(id, btn) {
+    const o = orders.find(x => x.id === id); if (!o) return;
+    const paid = !o.paid;
+    if (!paid && !confirm(`Mark ${id} as NOT paid?`)) return;
+    if (btn) btn.disabled = true;
+    try { await api('/api/admin/orders/' + id, { method: 'PATCH', body: JSON.stringify({ paid }) }); toast(paid ? `${id} marked paid ✓` : `${id} marked unpaid`); await refresh(); }
+    catch (ex) { toast('Not saved: ' + ex.message); if (btn) btn.disabled = false; }
   }
   async function setStatus(id, status, btn) {
     if (!status) return;
@@ -255,6 +266,7 @@
   $('#search').addEventListener('input', e => { filter.q = e.target.value; renderOrders(); });
   $('#dateFilter').addEventListener('change', e => { filter.date = e.target.value; renderOrders(); });
   document.addEventListener('click', e => {
+    const pb = e.target.closest('[data-paid]'); if (pb) { togglePaid(pb.dataset.paid, pb); return; }
     const st = e.target.closest('[data-step]'); if (st) { setStatus(st.dataset.step, st.dataset.to, st); return; }
     const ed = e.target.closest('[data-edit]'); if (ed) { const o = orders.find(x => x.id === ed.dataset.edit); if (o) openEditor(o); return; }
     const dl = e.target.closest('[data-del-order]'); if (dl) { deleteOne(dl.dataset.delOrder); return; }
@@ -292,7 +304,7 @@
           </div>
         </div>
         <div class="d-sec"><h4>Delivery</h4>
-          <div class="kv"><span>When</span><span><b>${dLabel(o.delivery.date)}</b>, ${o.delivery.slot}</span><span>Payment</span><span style="text-transform:capitalize">${esc(o.payment.replace(/-/g, ' '))}</span>
+          <div class="kv"><span>When</span><span><b>${dLabel(o.delivery.date)}</b>, ${o.delivery.slot}</span><span>Payment</span><span>${esc(payLabel(o.payment))} · <button type="button" class="paid-badge ${o.paid ? 'yes' : ''}" data-paid="${o.id}">${o.paid ? 'Paid ✓' : 'Unpaid — mark paid'}</button>${o.paid && o.paidAt ? ` <small class="muted">${dt(o.paidAt)}</small>` : ''}</span>
           ${o.notes ? `<span>Notes</span><span style="background:#fff6dc;padding:4px 8px;border-radius:8px">${esc(o.notes)}</span>` : ''}</div>
         </div>
         <div class="d-sec"><h4>Items</h4>
@@ -316,7 +328,7 @@
 
   // ---------- order editor (create + update) ----------
   const SLOTS = ['08:00-10:00', '10:00-12:00', '12:00-14:00', '14:00-16:00', '16:00-18:00', '18:00-20:00'];
-  const PAYMENTS = [['cash', 'Cash'], ['upi-on-delivery', 'UPI'], ['card-on-delivery', 'Card']];
+  const PAYMENTS = [['upi-now', 'Paid by scanner (UPI)'], ['cash', 'Cash on delivery'], ['upi-on-delivery', 'UPI on delivery'], ['card-on-delivery', 'Card on delivery']];
   let edMenu = null, edItems = [], editingId = null;
   function unitPrice(it) {
     if (it.type === 'custom') {
@@ -349,6 +361,7 @@
             <label>Date*<input name="date" type="date" value="${esc(d.date)}" /></label>
             <label>Slot*<select name="slot">${SLOTS.map(x => `<option ${x === d.slot ? 'selected' : ''}>${x}</option>`).join('')}</select></label>
             <label>Payment<select name="payment">${PAYMENTS.map(([v, t]) => `<option value="${v}" ${o?.payment === v ? 'selected' : ''}>${t}</option>`).join('')}</select></label>
+            <label class="toggle" style="align-self:end"><input type="checkbox" name="paid" ${o?.paid ? 'checked' : ''}/> Payment received</label>
             <label>Status<select name="status">${STATUSES.map(x => `<option value="${x}" ${(o?.status || 'pending') === x ? 'selected' : ''}>${label(x)}</option>`).join('')}</select></label>
           </div>
         </div>
@@ -378,7 +391,7 @@
       if (!edItems.length) { err.textContent = 'Add at least one item.'; return; }
       const body = {
         customer: { name: f.name.value, phone: f.phone.value, email: f.email.value, address: f.address.value },
-        delivery: { date: f.date.value, slot: f.slot.value }, payment: f.payment.value, status: f.status.value,
+        delivery: { date: f.date.value, slot: f.slot.value }, payment: f.payment.value, status: f.status.value, paid: f.paid.checked,
         notes: f.notes.value, adminNote: f.adminNote.value,
         items: edItems.map(i => (i.type === 'custom' ? { type: 'custom', fruits: i.fruits, toppings: i.toppings, qty: i.qty } : { type: 'bowl', id: i.id, qty: i.qty })),
       };
@@ -450,6 +463,10 @@
   }
   function renderMenuEditor() {
     $('#mCurrency').value = menu.currency; $('#mFee').value = menu.deliveryFee; $('#mFree').value = menu.freeDeliveryAbove; $('#mBase').value = menu.custom.basePrice;
+    const sh = menu.shop || {};
+    $('#sWa').value = sh.whatsapp || ''; $('#sGroup').value = sh.whatsappGroup || ''; $('#sPhone').value = sh.phone || '';
+    $('#sUpi').value = sh.upiId || ''; $('#sUpiName').value = sh.upiName || ''; $('#sHours').value = sh.hours || ''; $('#sArea').value = sh.area || '';
+    setQr(sh.upiQr || '');
     const cats = menu.categories || [];
     $('#bowlEditor').innerHTML = menu.bowls.map((b, i) => `
       <div class="bowl-row" data-i="${i}" data-image="${esc(b.image || '')}">
@@ -474,6 +491,8 @@
   function collectMenu() {
     return {
       currency: $('#mCurrency').value, deliveryFee: $('#mFee').value, freeDeliveryAbove: $('#mFree').value,
+      shop: { whatsapp: $('#sWa').value, whatsappGroup: $('#sGroup').value.trim(), phone: $('#sPhone').value, upiId: $('#sUpi').value.trim(),
+        upiName: $('#sUpiName').value, hours: $('#sHours').value, area: $('#sArea').value, upiQr: $('#sQrThumb').dataset.url || '' },
       bowls: $$('.bowl-row').map(row => {
         const orig = menu.bowls[+row.dataset.i] || {};
         const v = k => $(`[data-k="${k}"]`, row);
@@ -522,6 +541,23 @@
     if (out && out.type === 'image/webp') return out;
     return await new Promise(r => c.toBlob(r, 'image/jpeg', 0.86));
   }
+  function setQr(url) {
+    const t = $('#sQrThumb'); t.dataset.url = url;
+    t.innerHTML = url ? `<img src="${esc(url)}" alt="Payment QR" />` : '<span>No QR yet</span>';
+    $('#sQrRemove').hidden = !url;
+  }
+  $('#sQrFile').addEventListener('change', async e => {
+    const f = e.target.files[0]; if (!f) return;
+    $('#sQrThumb').innerHTML = '<span>Uploading…</span>';
+    try {
+      const blob = await shrinkImage(f, 1200);
+      const res = await fetch('/api/admin/upload', { method: 'POST', headers: { 'Content-Type': blob.type }, body: blob });
+      const d = await res.json(); if (!res.ok) throw new Error(d.error || 'Upload failed');
+      setQr(d.url); menuDirty = true; $('#menuMsg').textContent = '● QR uploaded — click Save menu to publish it';
+    } catch (ex) { toast(ex.message); setQr($('#sQrThumb').dataset.url || ''); }
+    e.target.value = '';
+  });
+  $('#sQrRemove').onclick = () => { setQr(''); menuDirty = true; $('#menuMsg').textContent = '● Unsaved changes'; };
   $('#bowlEditor').addEventListener('change', async e => {
     const inp = e.target.closest('[data-upload]'); if (!inp || !inp.files[0]) return;
     const row = inp.closest('.bowl-row'), f = inp.files[0];

@@ -262,6 +262,7 @@ $('#checkoutForm').addEventListener('submit', async e => {
     $('#successId').textContent = data.id;
     $('#successInfo').textContent = `Total ${fmt(data.total)} · Delivery on ${new Date(data.delivery.date + 'T00:00').toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' })}, ${data.delivery.slot}`;
     $('#successTrack').href = `/track?id=${encodeURIComponent(data.id)}`;
+    showPayment(data, payload.payment, payload.customer);
     $('#successModal').hidden = false;
     // refresh menu in case availability changed
   } catch (ex) {
@@ -272,12 +273,52 @@ $('#checkoutForm').addEventListener('submit', async e => {
   }
 });
 
+// ---------------- WhatsApp & contact ----------------
+const SHOP = () => MENU?.shop || {};
+const waLink = (text = '') => SHOP().whatsapp ? `https://wa.me/${SHOP().whatsapp}${text ? '?text=' + encodeURIComponent(text) : ''}` : '';
+const canPayNow = () => !!(SHOP().upiQr || SHOP().upiId);
+function renderContact() {
+  const sh = SHOP();
+  const fl = $('#waFloat');
+  if (sh.whatsapp) { fl.href = waLink('Hi Navrasa! I would like to order.'); fl.hidden = false; } else fl.hidden = true;
+  const bits = [];
+  if (sh.hours) bits.push(`<p class="muted">${esc(sh.hours)}</p>`);
+  if (sh.area) bits.push(`<p class="muted">Delivering to ${esc(sh.area)}</p>`);
+  if (sh.whatsapp) bits.push(`<a href="${waLink('Hi Navrasa!')}" target="_blank" rel="noopener">Chat on WhatsApp</a>`);
+  if (sh.whatsappGroup) bits.push(`<a href="${esc(sh.whatsappGroup)}" target="_blank" rel="noopener">Join our WhatsApp group</a>`);
+  if (sh.phone) bits.push(`<a href="tel:${esc(sh.phone.replace(/[^\d+]/g, ''))}">Call ${esc(sh.phone)}</a>`);
+  $('#contact').innerHTML = bits.length ? `<b>Contact</b>${bits.join('')}` : '';
+  $('#payNowOpt').hidden = !canPayNow();
+}
+function showPayment(order, payment, customer) {
+  const sh = SHOP(), amt = fmt(order.total);
+  const box = $('#payBox'), wa = $('#waShare');
+  const payNow = payment === 'upi-now' && canPayNow();
+  box.hidden = !payNow;
+  if (payNow) {
+    $('#payAmt').textContent = amt;
+    const qr = $('#payQr'); if (sh.upiQr) { qr.src = sh.upiQr; qr.hidden = false; } else qr.hidden = true;
+    $('#payUpiLine').innerHTML = sh.upiId ? `UPI ID: <b class="sel">${esc(sh.upiId)}</b>${sh.upiName ? ' · ' + esc(sh.upiName) : ''}` : 'Scan the QR code with any UPI app.';
+    const app = $('#payUpiApp');
+    if (sh.upiId) {
+      app.href = `upi://pay?pa=${encodeURIComponent(sh.upiId)}&pn=${encodeURIComponent(sh.upiName || 'Navrasa')}&am=${order.total}&cu=INR&tn=${encodeURIComponent('Navrasa ' + order.id)}`;
+      app.hidden = !/Android|iPhone|iPad/i.test(navigator.userAgent);
+    } else app.hidden = true;
+  }
+  if (sh.whatsapp) {
+    const msg = payNow
+      ? `Hi Navrasa! I've paid ${amt} for order ${order.id} (${customer.name}). Payment screenshot attached.`
+      : `Hi Navrasa! I just placed order ${order.id} (${customer.name}) — ${amt}, delivery ${order.delivery.date} ${order.delivery.slot}.`;
+    wa.href = waLink(msg); wa.textContent = payNow ? 'Send payment screenshot on WhatsApp' : 'Send order on WhatsApp'; wa.hidden = false;
+  } else wa.hidden = true;
+}
+
 // ---------------- boot ----------------
 async function loadMenu() {
   try {
     const res = await fetch('/api/menu');
     MENU = await res.json();
-    renderMenu(); renderBuilder(); renderCart();
+    renderMenu(); renderBuilder(); renderCart(); renderContact();
   } catch {
     $('#menuGrid').innerHTML = '<p class="muted">Could not load the menu. Please refresh.</p>';
   }

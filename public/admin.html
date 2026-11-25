@@ -134,6 +134,24 @@
           </div>
         </div>
         <div class="card">
+          <div class="card-h"><h3>WhatsApp &amp; payment</h3><span class="muted small">Shown on the shop and after checkout</span></div>
+          <div class="settings-row shop-set">
+            <label>WhatsApp number (with country code)<input id="sWa" inputmode="tel" placeholder="91 98765 43210" /></label>
+            <label>WhatsApp group link <span class="muted">(optional)</span><input id="sGroup" placeholder="https://chat.whatsapp.com/…" /></label>
+            <label>Phone to call <span class="muted">(optional)</span><input id="sPhone" inputmode="tel" placeholder="+91 98765 43210" /></label>
+            <label>UPI ID<input id="sUpi" placeholder="navrasa@okaxis" /></label>
+            <label>UPI name<input id="sUpiName" placeholder="Navrasa" /></label>
+            <label>Opening hours<input id="sHours" placeholder="Mon–Sun · 7 am – 8 pm" /></label>
+            <label class="span2">Delivery area<input id="sArea" placeholder="JP Nagar, Jayanagar, BTM Layout (Bengaluru)" /></label>
+            <div class="qr-cell">
+              <span class="lbl">Payment QR (scanner)</span>
+              <div class="qr-thumb" id="sQrThumb"><span>No QR yet</span></div>
+              <label class="btn sm">⬆ Upload QR image<input type="file" id="sQrFile" accept="image/png,image/jpeg,image/webp" hidden /></label>
+              <button type="button" class="link" id="sQrRemove" hidden>Remove</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
           <div class="card-h"><h3>Menu items</h3><button class="btn sm" id="addBowl">+ Add item</button></div>
           <div class="menu-filter"><select id="menuCat" aria-label="Category"></select><input type="search" id="menuSearch" placeholder="Search items…" /><span class="muted" id="menuCount"></span></div>
           <div id="bowlEditor"></div>

@@ -243,3 +243,17 @@ input:focus, select:focus, textarea:focus { outline: 2px solid rgba(255, 90, 60,
 .bowl-row { grid-template-columns: 1.3fr .8fr .6fr .5fr auto; }
 .bowl-row .desc { grid-column: 1 / span 3; } .bowl-row .tagf { grid-column: span 2; } .bowl-row .incf { grid-column: 1 / -1; }
 @media (max-width: 860px) { .bowl-row { grid-template-columns: 1fr 1fr; } .bowl-row .desc, .bowl-row .tagf, .bowl-row .incf { grid-column: 1 / -1; } }
+
+/* WhatsApp & payment settings */
+.shop-set { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.shop-set .span2 { grid-column: span 2; }
+.qr-cell { grid-row: span 2; display: grid; gap: 6px; justify-items: start; align-content: start; }
+.qr-cell .lbl { font-size: .82rem; color: var(--ink2); font-weight: 500; }
+.qr-thumb { width: 120px; height: 120px; border: 1px dashed var(--line); border-radius: 10px; display: grid; place-items: center; background: #faf7f1; font-size: .75rem; color: var(--ink2); overflow: hidden; }
+.qr-thumb img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
+@media (max-width: 860px) { .shop-set { grid-template-columns: 1fr; } .shop-set .span2 { grid-column: auto; } }
+/* paid / unpaid */
+.paid-badge { display: inline-block; margin-top: 4px; border: 1px solid #f0c36d; background: #fff6dc; color: #8a6100; border-radius: 999px; font: 700 .72rem var(--body); padding: .15em .7em; cursor: pointer; }
+.paid-badge.yes { border-color: #bfe3c9; background: #e5f5ea; color: var(--s-delivered); }
+.paid-badge:disabled { opacity: .5; }
+.paid-badge { white-space: nowrap; }
