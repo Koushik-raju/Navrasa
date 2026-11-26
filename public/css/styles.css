@@ -627,3 +627,99 @@ body { background: var(--well-bg); color: #263330; }
 @media (prefers-reduced-motion: reduce) { .pill .pulse { animation: none; } }
 .section-head h2, .hero h1 { text-wrap: balance; }
 .goodness .section-head { max-width: 760px; }
+
+/* =====================================================================
+   BRIGHT & HEALTHY · vivid, juicy, energetic
+   --c bright colour · --t tint · --d deep tone · --on text that sits on --c
+   ===================================================================== */
+[data-cat="fruit-bowls"]    { --c: #ff6b2c; --d: #c2410c; --on: #fff; }
+[data-cat="smoothies"]      { --c: #ff2e7e; --d: #be185d; --on: #fff; }
+[data-cat="smoothie-bowls"] { --c: #8b5cf6; --d: #6d28d9; --on: #fff; }
+[data-cat="juices"]         { --c: #ffc21a; --d: #a15c00; --on: #4a2c00; }
+[data-cat="salads"]         { --c: #1fc45a; --d: #15803d; --on: #fff; }
+[data-cat="breakfast"]      { --c: #ff9f1a; --d: #b45309; --on: #fff; }
+[data-cat="addons"]         { --c: #0fc2d8; --d: #0e7490; --on: #fff; }
+[data-cat="combos"]         { --c: #ff4545; --d: #b91c1c; --on: #fff; }
+[data-cat="plans"]          { --c: #2f8cff; --d: #1d4ed8; --on: #fff; }
+[data-cat] { --t: color-mix(in srgb, var(--c) 13%, #fff); }
+
+:root { --well: #16b04f; --well-d: #0f7a37; --well-t: #e3f9ea; --well-bg: #ffffff; }
+body { background: #fff; color: #1d2724; }
+.eyebrow { color: #ff6b2c; }
+
+/* nav: crisp white bar above the colourful hero */
+.nav, .nav.scrolled { background: rgba(255,255,255,.96); backdrop-filter: blur(10px); box-shadow: 0 1px 0 #eef1ee; }
+.nav-links a:hover { color: #16b04f; opacity: 1; }
+.cart-btn { border-color: #e3ebe5; }
+.cart-btn b { background: #ffc21a; color: #3d2600; }
+
+/* hero: bright fresh green with fruity glows */
+.hero.fresh { background: linear-gradient(135deg, #0fbf5a 0%, #12b886 50%, #10b5b0 100%); color: #fff; padding-top: 140px; }
+.blobs span { filter: blur(60px); opacity: .7; }
+.blobs .b1 { background: #ffd43b; opacity: .55; } .blobs .b2 { background: #ff7a45; opacity: .5; }
+.blobs .b3 { background: #b4f04a; opacity: .5; } .blobs .b4 { background: #ff5fa2; opacity: .45; }
+.hero.fresh h1 { color: #fff; text-shadow: 0 2px 18px rgba(0,60,30,.18); }
+.hero.fresh h1 em { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: #ffe14a; }
+.hero.fresh .lead { color: rgba(255,255,255,.94); }
+.hero .pill { background: #fff; color: #0f7a37; }
+.pill .pulse { background: #ff6b2c; }
+.hero.fresh .hero-stats { border-top-color: rgba(255,255,255,.3); }
+.hero.fresh .hero-stats li { background: #fff; box-shadow: 0 14px 30px -18px rgba(0,50,25,.55); }
+.hero.fresh .hero-stats li:nth-child(1) b { color: #ff6b2c; } .hero.fresh .hero-stats li:nth-child(2) b { color: #16b04f; } .hero.fresh .hero-stats li:nth-child(3) b { color: #8b5cf6; }
+.hero.fresh .hero-stats span { color: #4c5a55; }
+.hero.fresh .btn-primary { background: #ffe14a; color: #2b2100; box-shadow: 0 14px 28px -14px rgba(0,0,0,.35); }
+.hero.fresh .btn-primary:hover { background: #ffd51a; color: #1d1600; }
+.hero.fresh .btn-ghost { background: transparent; border-color: rgba(255,255,255,.75); color: #fff; }
+.hero.fresh .btn-ghost:hover { background: #fff; color: #0f7a37; }
+
+/* buttons everywhere else: bright green, white text */
+.btn-primary { background: linear-gradient(135deg, #1fc45a, #12b886); color: #fff; box-shadow: 0 12px 24px -14px rgba(18,150,80,.8); }
+.btn-primary:hover { background: linear-gradient(135deg, #17ad4f, #0f9f76); color: #fff; }
+.btn-primary:disabled { background: #e7ece9; color: #94a19b; box-shadow: none; }
+
+/* good for you: solid bright icons */
+.good { outline: none; border-top: 5px solid var(--gc); box-shadow: 0 16px 36px -26px rgba(20,60,40,.5); }
+.good svg { background: var(--gc); stroke: #fff; }
+.good:nth-child(1) { --gc: #16b04f; } .good:nth-child(2) { --gc: #0fc2d8; } .good:nth-child(3) { --gc: #ffb000; } .good:nth-child(4) { --gc: #ff2e7e; }
+.trust li { background: #16b04f; color: #fff; }
+.trust li::before { background-color: #fff; }
+
+/* menu: bold tabs, bright strips, bright Add buttons */
+.menu-tabs button { background: #fff; border: 1.5px solid #e9eeeb; font-weight: 600; }
+.menu-tabs button .dot { background: var(--c, #1fc45a); box-shadow: none; }
+.menu-tabs button:hover { border-color: var(--c, #1fc45a); background: var(--t, #fff); }
+.menu-tabs button.on { background: var(--c); border-color: var(--c); color: var(--on, #fff); }
+.menu-tabs button.on .dot { background: var(--on, #fff); }
+.menu-tabs button.on b { color: var(--on, #fff); opacity: .85; }
+.menu-tabs button[data-cat="all"].on { background: #16b04f; border-color: #16b04f; color: #fff; }
+.cat-title::before { background: var(--c); }
+.cat-title small { background: var(--c); color: var(--on); }
+.bowl-card { outline: 1.5px solid color-mix(in srgb, var(--c) 30%, #fff); box-shadow: 0 12px 28px -24px rgba(20,40,30,.5); }
+.bowl-card::before { background: var(--c); height: 8px; }
+.bowl-card:hover { outline-color: var(--c); box-shadow: 0 20px 36px -22px color-mix(in srgb, var(--c) 60%, transparent); }
+.card-top .tag { background: var(--c); color: var(--on); outline: none; }
+.bowl-card .add-btn, .addon-card .add-btn { background: var(--c); color: var(--on); }
+.bowl-card .add-btn:hover, .addon-card .add-btn:hover { background: var(--d); color: #fff; }
+.addon-card { outline: 1.5px solid color-mix(in srgb, var(--c) 35%, #fff); }
+
+/* builder: chosen fruit lights up in its own colour */
+.builder { background: linear-gradient(180deg, #fff, #effcf3); }
+.chip.on { background: var(--c); border-color: var(--c); color: #fff; }
+.chip.on .dot { background: #fff; }
+.chip.on small { color: rgba(255,255,255,.9); }
+.chip.on[data-fruit="banana"], .chip.on[data-fruit="pineapple"], .chip.on[data-fruit="mango"] { color: #3d2600; }
+.chip.on[data-fruit="banana"] small, .chip.on[data-fruit="pineapple"] small, .chip.on[data-fruit="mango"] small { color: #5c3d00; }
+#toppingChips .chip.on { background: #16b04f; border-color: #16b04f; color: #fff; }
+#toppingChips .chip.on small { color: rgba(255,255,255,.9); }
+.builder-total b { color: #16b04f; }
+.qty { background: #e3f9ea; }
+
+/* how it works + banner */
+.step { border-top: 5px solid var(--c); }
+.step b { background: var(--c); color: #fff; }
+.cta-band { background: linear-gradient(120deg, #ff6b2c, #ff2e7e 55%, #8b5cf6); color: #fff; }
+.cta-band h2 { color: #fff; }
+.cta-band .btn-light { background: #fff; color: #e0245e; }
+.blobs .b1 { background: #ffe14a; opacity: .45; } .blobs .b2 { background: #fff36b; opacity: .3; }
+.blobs .b3 { background: #b8f25a; opacity: .5; } .blobs .b4 { background: #6ff2c8; opacity: .45; }
+.menu-tabs { background: #fff !important; }
