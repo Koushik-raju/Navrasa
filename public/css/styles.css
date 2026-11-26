@@ -565,3 +565,65 @@ body { background: #fffdf9; color: #2b2a28; }
 .cart-item { border-bottom-color: #f3ebe4; }
 .drawer, .modal-card { background: #fffdf9; }
 .paybox, .co-summary { border-color: #f1e7df; }
+
+/* =====================================================================
+   WELLNESS · calm, clean, healing
+   sage & mint as the main colour, lots of white space, soft shadows
+   ===================================================================== */
+:root { --well: #4f9a6c; --well-d: #2c6b47; --well-t: #eaf6ee; --well-bg: #f8fbf7; }
+body { background: var(--well-bg); color: #263330; }
+.nav.scrolled { background: rgba(248, 251, 247, .9); }
+.nav a:hover { color: var(--well-d); }
+.eyebrow { color: var(--well); }
+.section-head p { color: #5d6b66; }
+
+/* hero: fresh morning air */
+.hero.fresh { background: linear-gradient(170deg, #f2faf4 0%, #ecf7f4 45%, #f7fbf0 80%, #f8fbf7 100%); }
+.blobs span { opacity: .45; filter: blur(70px); }
+.blobs .b1 { background: #c9ecd4; } .blobs .b2 { background: #c7ebea; }
+.blobs .b3 { background: #f5ecc4; opacity: .45; } .blobs .b4 { background: #dcd6fa; opacity: .4; }
+.hero.fresh h1 { color: #1f2d28; letter-spacing: -.02em; }
+.hero.fresh h1 em { background: linear-gradient(90deg, #3f9468, #3a9d96 70%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero.fresh .lead { color: #4f5d58; }
+.hero .pill { display: inline-flex; align-items: center; gap: .55em; background: rgba(255,255,255,.85); color: var(--well-d); font-weight: 600; box-shadow: 0 6px 20px -14px rgba(40,100,70,.6); }
+.pill .pulse { width: 8px; height: 8px; border-radius: 50%; background: #5fc287; box-shadow: 0 0 0 0 rgba(95,194,135,.6); animation: pulse 2.4s ease-out infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(95,194,135,.55); } 70%, 100% { box-shadow: 0 0 0 10px rgba(95,194,135,0); } }
+.hero.fresh .hero-stats li { background: rgba(255,255,255,.85); box-shadow: 0 10px 26px -20px rgba(40,100,70,.55); }
+.hero.fresh .hero-stats li:nth-child(1) b { color: #3f9468; } .hero.fresh .hero-stats li:nth-child(2) b { color: #2f8f8a; } .hero.fresh .hero-stats li:nth-child(3) b { color: #6a5bc4; }
+
+/* buttons: calm sage */
+.btn-primary { background: linear-gradient(135deg, #63b083, #4a9c84); color: #fff; box-shadow: 0 12px 24px -14px rgba(47,122,76,.75); }
+.btn-primary:hover { background: linear-gradient(135deg, #559f75, #3f8c75); color: #fff; }
+.btn-ghost { border-color: #d5e6db; color: #2c4a3c; background: rgba(255,255,255,.7); }
+.btn-ghost:hover { background: #fff; border-color: #b9d8c4; color: #1f3a2d; }
+.cart-btn { border-color: #e0ece4; }
+.cart-btn b { background: #cdeed9; color: #1f5a37; }
+
+/* good for you */
+.goodness { padding-top: 70px; }
+.good-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; max-width: 1120px; margin: 0 auto; }
+.good { background: #fff; border-radius: 22px; padding: 26px 22px; box-shadow: 0 14px 34px -28px rgba(40,90,60,.55); outline: 1px solid #e8f1eb; }
+.good svg { width: 46px; height: 46px; padding: 11px; border-radius: 14px; background: var(--g); stroke: var(--gd); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; display: block; margin-bottom: 14px; }
+.good h4 { font-family: var(--display); font-size: 1.2rem; margin: 0 0 .35em; color: #1f2d28; }
+.good p { margin: 0; color: #5d6b66; font-size: .95rem; line-height: 1.55; }
+.trust { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 14px; padding: 0; margin: 28px auto 0; max-width: 900px; }
+.trust li { display: inline-flex; align-items: center; gap: .5em; background: var(--well-t); color: var(--well-d); border-radius: 999px; padding: .5em 1em; font-size: .9rem; font-weight: 600; }
+.trust li::before { content: ""; width: 16px; height: 16px; border-radius: 50%; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.3l2.2 2.2 4.8-4.8' fill='none' stroke='%232c6b47' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% no-repeat; }
+@media (max-width: 900px) { .good-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .good-grid { grid-template-columns: 1fr; } .good { display: grid; grid-template-columns: 46px 1fr; column-gap: 14px; padding: 18px; } .good svg { grid-row: span 2; margin: 0; } }
+
+/* menu & builder touches */
+.menu-tabs button[data-cat="all"].on { background: var(--well-d); border-color: var(--well-d); }
+.builder { background: linear-gradient(180deg, var(--well-bg), #eef8f2); }
+.builder-total b { color: var(--well-d); }
+.qty { background: var(--well-t); }
+
+/* how it works + banner */
+.step { background: #fff; border-radius: 20px; }
+.cta-band { background: linear-gradient(120deg, #d9f1e2, #d3eeee 55%, #e4f1da); color: #1f3a2d; }
+.cta-band h2 { color: #1f3a2d; }
+.cta-band .btn-light { color: var(--well-d); }
+.drawer, .modal-card { background: #fbfdfb; }
+@media (prefers-reduced-motion: reduce) { .pill .pulse { animation: none; } }
+.section-head h2, .hero h1 { text-wrap: balance; }
+.goodness .section-head { max-width: 760px; }
